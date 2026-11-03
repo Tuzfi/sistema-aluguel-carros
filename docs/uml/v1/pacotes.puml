@@ -1,0 +1,62 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #38566B
+skinparam classBackgroundColor #EFF7FA
+skinparam classBorderColor #38566B
+skinparam packageBackgroundColor #F5F8FA
+skinparam packageBorderColor #38566B
+skinparam roundcorner 8
+
+left to right direction
+title ViaCar - Pacotes e visão lógica v1
+package "Construção das páginas web" {
+ package "React + Vite" as frontend {
+  [Rotas e páginas] as paginas
+  [Componentes e formulários] as componentes
+  [Cliente HTTP e sessão] as http
+ }
+}
+package "Gestão de pedidos e contratos - Spring Boot MVC" {
+ package "auth" as auth
+ package "cliente" as cliente
+ package "veiculo" as veiculo
+ package "pedido" as pedido
+ package "contrato" as contrato
+ package "shared" as shared
+ package "Camadas internas de cada módulo" {
+  [Controller / DTO] as controller
+  [Service / regras] as service
+  [Model / Entity] as model
+  [Repository] as repository
+ }
+}
+database "Supabase\nPostgreSQL" as db
+paginas --> componentes
+paginas --> http
+http --> controller : HTTPS / JSON
+controller --> service
+service --> model
+service --> repository
+repository --> db : JDBC / TLS
+cliente ..> auth : identidade
+veiculo ..> auth : proprietário
+pedido ..> cliente
+pedido ..> veiculo
+contrato ..> pedido
+contrato ..> veiculo
+auth ..> shared
+cliente ..> shared
+veiculo ..> shared
+pedido ..> shared
+contrato ..> shared
+note bottom of controller
+ MVC: controller HTTP, modelo de domínio,
+ apresentação desacoplada no React.
+ Serviços aplicam autorização e transações.
+end note
+
+@enduml

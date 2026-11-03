@@ -1,0 +1,37 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #38566B
+skinparam classBackgroundColor #EFF7FA
+skinparam classBorderColor #38566B
+skinparam packageBackgroundColor #F5F8FA
+skinparam packageBorderColor #38566B
+skinparam roundcorner 8
+
+title ViaCar - Estados do pedido v1
+[*] --> PENDENTE : cliente cria
+PENDENTE --> PENDENTE : cliente/agente edita
+PENDENTE --> APROVADO : agente aprova
+PENDENTE --> REPROVADO : agente reprova
+APROVADO --> PENDENTE : cliente/agente edita
+REPROVADO --> PENDENTE : cliente/agente edita
+APROVADO --> APROVADO : agente reaprova
+REPROVADO --> REPROVADO : agente reprova novamente
+APROVADO --> REPROVADO : agente reavalia
+REPROVADO --> APROVADO : agente reavalia
+PENDENTE --> CANCELADO : cliente dono cancela
+APROVADO --> CANCELADO : cliente dono cancela
+REPROVADO --> CANCELADO : cliente dono cancela
+APROVADO --> CONTRATADO : agente proprietário emite contrato\n[parecer corrente + disponibilidade]
+CANCELADO --> [*]
+CONTRATADO --> [*]
+legend bottom
+ Edição material incrementa revisão e invalida
+ parecer e oferta de crédito correntes.
+ Histórico permanece imutável.
+endlegend
+
+@enduml

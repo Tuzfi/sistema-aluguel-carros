@@ -1,0 +1,120 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #38566B
+skinparam classBackgroundColor #EFF7FA
+skinparam classBorderColor #38566B
+skinparam packageBackgroundColor #F5F8FA
+skinparam packageBorderColor #38566B
+skinparam roundcorner 8
+
+title ViaCar - Classes de domínio v1
+hide empty methods
+class Usuario {
+ id: UUID
+ usuario: String
+ senhaHash: String
+ papel: Papel
+ ativo: boolean
+}
+class Cliente {
+ id: UUID
+ rg: String
+ cpf: String
+ nome: String
+ endereco: String
+ profissao: String
+ versao: long
+}
+class VinculoEmprego {
+ posicao: int
+ empregador: String
+ rendaMensal: BigDecimal
+}
+class Agente {
+ id: UUID
+ razaoSocial: String
+ documento: String
+}
+class Veiculo {
+ id: UUID
+ matricula: String
+ ano: int
+ marca: String
+ modelo: String
+ placa: String
+ diaria: BigDecimal
+ ativo: boolean
+ versao: long
+}
+class Pedido {
+ id: UUID
+ inicio: LocalDate
+ fim: LocalDate
+ diaria: BigDecimal
+ total: BigDecimal
+ tipoContrato: TipoContrato
+ status: StatusPedido
+ revisao: int
+ versao: long
+}
+class Avaliacao {
+ id: UUID
+ revisaoPedido: int
+ decisao: Decisao
+ justificativa: String
+ dadosFinanceiros: JSON
+ criadoEm: Instant
+}
+class OfertaCredito {
+ id: UUID
+ revisaoPedido: int
+ principal: BigDecimal
+ taxaMensal: BigDecimal
+ parcelas: int
+ status: StatusOferta
+ versao: long
+}
+class Contrato {
+ id: UUID
+ termos: JSON
+ criadoEm: Instant
+}
+class EventoPedido {
+ acao: String
+ statusAnterior: StatusPedido
+ statusNovo: StatusPedido
+ revisao: int
+ criadoEm: Instant
+}
+Usuario "1" -- "0..1" Cliente : perfil cliente
+Usuario "1" -- "0..1" Agente : perfil agente
+note top of Usuario
+ {xor} Cliente ou Agente conforme papel.
+ Papéis: CLIENTE, EMPRESA, BANCO.
+end note
+Cliente "1" *-- "0..3" VinculoEmprego
+Usuario "1" -- "0..*" Veiculo : proprietário
+Cliente "1" -- "0..*" Pedido
+Veiculo "1" -- "0..*" Pedido
+Pedido "1" -- "0..*" Avaliacao
+Agente "1" -- "0..*" Avaliacao : autor
+Pedido "1" -- "0..*" OfertaCredito
+Agente "1" -- "0..*" OfertaCredito : banco concedente
+Pedido "1" -- "0..1" Contrato
+Avaliacao "1" -- "0..1" Contrato : parecer utilizado
+OfertaCredito "0..1" -- "0..1" Contrato : crédito opcional
+Agente "1" -- "0..*" Contrato : emissor
+Usuario "1" -- "0..*" Contrato : proprietário anterior
+Usuario "1" -- "0..*" Contrato : proprietário final
+Pedido "1" *-- "1..*" EventoPedido
+Usuario "1" -- "0..*" EventoPedido : autor
+note bottom of OfertaCredito
+ Concedente deve ter papel BANCO.
+ No máximo uma oferta ATIVA por pedido.
+end note
+
+@enduml

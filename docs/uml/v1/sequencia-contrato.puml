@@ -1,0 +1,55 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #38566B
+skinparam classBackgroundColor #EFF7FA
+skinparam classBorderColor #38566B
+skinparam packageBackgroundColor #F5F8FA
+skinparam packageBorderColor #38566B
+skinparam roundcorner 8
+
+title ViaCar - Execução de contrato v1
+actor "Agente proprietário" as agente
+participant "React" as ui
+participant "Security + Controller" as api
+participant "ContratoService" as servico
+database "PostgreSQL" as db
+agente -> ui : Confirma termos e crédito opcional
+ui -> api : POST /pedidos/{id}/contrato\nversaoPedido, ofertaCreditoId opcional + CSRF
+api -> api : Validar sessão, papel e DTO
+api -> servico : emitirContrato(agente, comando)
+servico -> db : BEGIN; bloquear pedido e veículo
+db --> servico : Pedido, proprietário, parecer e oferta
+servico -> servico : Validar versão, APROVADO, parecer corrente,\npropriedade, carro ativo e crédito elegível
+servico -> db : Consultar contratos com período sobreposto
+db --> servico : Disponibilidade
+alt validações aprovadas
+ servico -> db : Inserir contrato e retratos imutáveis
+ servico -> db : Pedido = CONTRATADO; registrar evento
+ alt crédito selecionado
+  servico -> db : Oferta = CONTRATADA
+ else oferta existente não selecionada
+  servico -> db : Oferta = INVALIDADA
+ end
+ opt transferência ao cliente
+  servico -> db : Atualizar proprietário do veículo
+ end
+ servico -> db : COMMIT
+ servico --> api : Contrato
+ api --> ui : 201 Created + Location
+ ui --> agente : Exibir contrato
+else conflito de estado, versão ou disponibilidade
+ servico -> db : ROLLBACK
+ servico --> api : Conflito de negócio
+ api --> ui : 409 com mensagem
+ ui --> agente : Explicar e atualizar pedido
+end
+note over api
+ Sem sessão: 401; papel proibido: 403.
+ Falha de autorização interrompe antes da transação.
+end note
+
+@enduml

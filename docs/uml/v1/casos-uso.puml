@@ -1,0 +1,66 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #38566B
+skinparam classBackgroundColor #EFF7FA
+skinparam classBorderColor #38566B
+skinparam packageBackgroundColor #F5F8FA
+skinparam packageBorderColor #38566B
+skinparam roundcorner 8
+
+left to right direction
+title ViaCar - Casos de uso v1
+actor Visitante
+actor "Usuário autenticado" as Usuario
+actor Cliente
+actor Agente
+actor Empresa
+actor Banco
+Cliente --|> Usuario
+Agente --|> Usuario
+Empresa --|> Agente
+Banco --|> Agente
+rectangle "Sistema de aluguel de carros" {
+ usecase "Cadastrar cliente" as Cadastro
+ usecase "Entrar" as Login
+ usecase "Sair" as Logout
+ usecase "Consultar catálogo" as Catalogo
+ usecase "Gerenciar próprio perfil\n(inclui exclusão lógica)" as Perfil
+ usecase "Criar pedido" as Criar
+ usecase "Consultar pedidos e status" as Consultar
+ usecase "Modificar pedido elegível" as Editar
+ usecase "Cancelar próprio pedido" as Cancelar
+ usecase "Avaliar financeiramente" as Avaliar
+ usecase "Manter frota própria" as Frota
+ usecase "Emitir contrato\n(somente proprietário)" as Contratar
+ usecase "Validar aprovação\ne disponibilidade" as Validar
+ usecase "Consultar contrato" as VerContrato
+ usecase "Oferecer crédito" as Credito
+}
+Visitante --> Cadastro
+Visitante --> Login
+Usuario --> Logout
+Usuario --> Catalogo
+Cliente --> Perfil
+Cliente --> Criar
+Cliente --> Consultar
+Cliente --> Editar
+Cliente --> Cancelar
+Cliente --> VerContrato
+Agente --> Consultar
+Agente --> Editar
+Agente --> Avaliar
+Agente --> Frota
+Agente --> Contratar
+Agente --> VerContrato
+Banco --> Credito
+Contratar ..> Validar : <<include>>
+note bottom of Credito
+ Oferta opcional de banco; somente antes do contrato.
+ Cadastro de agentes: comando operacional restrito.
+end note
+
+@enduml
