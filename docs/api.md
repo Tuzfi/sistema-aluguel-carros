@@ -62,6 +62,10 @@ o servidor calculará três diárias e total `450.00`.
   404: recurso inexistente ou objeto de outro cliente; 409: duplicidade, versão antiga,
   estado inválido ou indisponibilidade; 429: limite de login; 500: erro genérico.
 - Campos desconhecidos sensíveis, como papel/status/clienteId, não são aceitos nos DTOs.
+- Mutações de pedidos de cliente inativo retornam 409, inclusive avaliação e crédito.
+- Contratação retorna 409 se o início já passou ou fim <= início, considerando a data
+  atual em America/Sao_Paulo. Transferência também retorna 409 quando houver outro
+  contrato do veículo com fim > data atual, mesmo em período sem sobreposição.
 - Avaliações e emissão usam versão do pedido; somente uma requisição concorrente prevalece.
   Após timeout, a interface consulta o pedido antes de tentar novamente emitir contrato.
 - Ao login, atualizar token CSRF se a sessão for renovada; logout limpa estado do front-end.

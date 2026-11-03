@@ -53,7 +53,9 @@ São escolhas para tornar o enunciado implementável; não são transcrições d
   positiva em BRL, duas casas decimais. Zero vínculos é permitido; agente decide o parecer.
   O cliente gerencia apenas o próprio cadastro. Agente não tem CRUD geral de clientes.
 - **D04 - Pedidos:** datas civis ISO, início inclusivo e fim exclusivo, pelo menos uma
-  diária. Criação e alteração exigem início não passado, veículo ativo e disponível.
+  diária. Criação, alteração e contratação exigem início não passado, veículo ativo e
+  disponível. Na contratação, revalidar início >= data atual e fim > início usando
+  o fuso America/Sao_Paulo; datas vencidas exigem edição e novo parecer.
   Valor diário vem do veículo e é copiado ao pedido; total = diárias × diária.
 - **D05 - Estados:** criação gera PENDENTE. Cliente pode editar/cancelar PENDENTE,
   APROVADO e REPROVADO; agente pode editar e avaliar PENDENTE, APROVADO e REPROVADO.
@@ -66,7 +68,8 @@ São escolhas para tornar o enunciado implementável; não são transcrições d
   Agente pode reavaliar antes da contratação; novo parecer substitui o corrente.
   Reprovação invalida qualquer oferta de crédito ativa.
 - **D07 - Contrato:** somente agente pode emitir contrato de pedido APROVADO com
-  parecer válido para a revisão corrente. Um contrato por pedido; execução atômica
+  parecer válido para a revisão corrente, cliente ativo e período ainda válido.
+  Revalidar essas condições dentro da transação. Um contrato por pedido; execução atômica
   muda estado a CONTRATADO. Valores, partes e veículo ficam registrados em um retrato
   imutável. Não há assinatura eletrônica nem execução financeira real.
 - **D08 - Titularidade:** tipos LOCACAO_SIMPLES (mantém proprietário) e
@@ -88,6 +91,10 @@ São escolhas para tornar o enunciado implementável; não são transcrições d
 - **D11 - Exclusão:** exclusão de cliente é lógica, revoga acesso e preserva histórico.
   Bloquear enquanto houver pedido ativo (PENDENTE/APROVADO) ou contrato com fim futuro.
   Cliente cancela pedidos elegíveis antes de encerrar a conta. CPF e usuário ficam reservados.
+  Pedidos REPROVADOS preservados após a inativação ficam disponíveis somente para consulta:
+  agentes não podem editar, reavaliar, oferecer crédito ou contratar para cliente inativo.
+  Essas tentativas retornam 409. A inativação e as mutações dos pedidos bloqueiam a mesma
+  linha de usuário do cliente para impedir que aprovação e encerramento ocorram em paralelo.
 - **D12 - Frota:** agente cadastra carro com propriedade atribuída a si próprio.
   Somente proprietário agente edita/inativa sua frota. Não excluir carros referenciados.
   Inativação impede novos pedidos/contratos, sem apagar registros existentes; não pode

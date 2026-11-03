@@ -2,7 +2,7 @@
 
 ## Matriz de cobertura
 
-| Requisito | Histórias | Modelos v1 | Cenários de verificação |
+| Requisito | Histórias | Modelos vigentes | Cenários de verificação |
 | --- | --- | --- | --- |
 | RF01 | HU01-02 | casos-uso, classes, pacotes | T01, T02, T03 |
 | RF02 | HU03-04 | classes, casos-uso | T04, T05 |
@@ -26,9 +26,17 @@
   banco não altera oferta de outro banco; agente não edita carro de terceiro; CSRF obrigatório.
 - T04: persistir zero e três empregos, rejeitar quatro e renda inválida, editar removendo vínculo.
 - T05: encerramento bloqueado por pedidos ativos/contrato futuro; inativação elegível
-  invalida sessões; histórico e identidade únicos permanecem.
+  invalida sessões; histórico e identidade únicos permanecem. Cliente com pedido
+  REPROVADO encerra a conta; tentativas posteriores do agente de editar, reavaliar,
+  oferecer crédito ou contratar retornam 409. Disputar inativação e aprovação em
+  transações concorrentes: aprovação anterior bloqueia a inativação; inativação
+  anterior bloqueia a aprovação, sem estado final incompatível.
 - T06: datas inválidas/passadas, carro inativo, total calculado com decimal e dias corretos;
   fim exclusivo permite contrato seguinte começar exatamente na devolução anterior.
+  Criar/aprovar pedido com início em 10/12/2026 e tentar contratar em 11/12/2026:
+  esperar 409, sem contrato ou mudança de propriedade. Usar relógio controlado em
+  America/Sao_Paulo; contratação no próprio dia do início é permitida se as demais
+  condições forem válidas. Cobrir mudança de dia entre aprovação e contratação.
 - T07: tabela de transições inteira, estados terminais e conflito de versão; edição material
   invalida parecer e oferta sem apagar histórico.
 - T08: status, valores e histórico corretos no detalhe; paginação e filtros sem vazamento.
@@ -40,6 +48,10 @@
 - T12: locação mantém proprietário, transferência altera para cliente; transação revertida
   não altera proprietário; agente que não é dono não emite contrato; transferência é
   rejeitada quando há outro contrato vigente/futuro, mesmo sem sobreposição.
+  Exemplo: transferência de 10 a 12/12 e contrato existente de 20 a 22/12, com
+  data atual 01/12, deve retornar 409 sem alterar o dono. Contrato encerrado
+  (fim <= data atual) não bloqueia transferência; locação simples continua
+  permitindo períodos futuros sem sobreposição.
 - T13: crédito opcional, sem oferta também contrata; limites dos termos, oferta invalidada,
   banco concedente correto, invalidação por reprovação ou não seleção na contratação
   e imutabilidade após associação ao contrato.

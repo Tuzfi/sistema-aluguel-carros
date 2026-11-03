@@ -56,6 +56,9 @@ Limites são decisões de implementação, não exigências explícitas do PDF.
 | Cancelar | PENDENTE/APROVADO/REPROVADO | CANCELADO | Cliente dono |
 | Contratar | APROVADO | CONTRATADO | Agente proprietário do veículo |
 
-Reavaliação é permitida antes do contrato. CANCELADO e CONTRATADO não possuem saídas.
+Reavaliação é permitida antes do contrato e somente para cliente ativo. CANCELADO e
+CONTRATADO não possuem saídas. Após inativação do cliente, seus pedidos são somente leitura.
+Contratação exige início >= data atual em America/Sao_Paulo e fim > início; transferência
+exige também ausência de outros contratos do veículo com fim > data atual.
 Oferta de crédito exige APROVADO, mas não altera o estado do pedido. Todos os comandos
 de mutação exigem versão corrente; operações proibidas por estado retornam 409.

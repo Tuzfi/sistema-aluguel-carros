@@ -50,9 +50,16 @@ banco, chave service-role nem acesso direto às tabelas. A autorização da apli
 Spring; criar schema dedicado sem exposição pela Data API do Supabase.
 Migrações Flyway controlam estrutura; `ddl-auto=validate` evita alteração silenciosa do banco.
 
-Execução de contrato: bloquear pedido e veículo em ordem consistente, validar versão,
-estado, proprietário, parecer, oferta e disponibilidade; gravar contrato, atualizar estado
-e eventual titularidade na mesma transação. Consultar sobreposição com
+Execução de contrato: bloquear, nesta ordem, usuário do cliente, pedido e veículo;
+validar cliente ativo, versão, estado, proprietário, parecer, oferta e disponibilidade.
+Revalidar início >= data atual em America/Sao_Paulo e fim > início antes de gravar.
+Pedidos vencidos precisam ser editados e reavaliados; retornar 409 na contratação.
+Para TRANSFERENCIA_AO_CLIENTE, consultar também qualquer outro contrato do veículo
+com fim > data atual, mesmo sem sobreposição; se existir, retornar 409.
+Gravar contrato, atualizar estado e eventual titularidade na mesma transação.
+A inativação do cliente e as mutações de seus pedidos devem bloquear primeiro a mesma
+linha de usuário e revalidar atividade/impedimentos sob bloqueio.
+Consultar sobreposição com
 `inicioExistente < fimNovo AND fimExistente > inicioNovo`.
 Índice único em contrato.pedido_id assegura um contrato por pedido.
 Edição e avaliação usam versionamento otimista; conflitos devolvem 409, sem sobrescrever dados.
