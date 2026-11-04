@@ -5,6 +5,21 @@ const imagens = resolve(import.meta.dirname, '../../docs/screenshots');
 const senha = 'DemoSomenteTeste123!';
 async function foto(page: Page, nome: string) {
   mkdirSync(imagens, { recursive: true });
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await page.evaluate(async () => {
+    const imgs = Array.from(document.querySelectorAll('img'));
+    await Promise.all(
+      imgs.map((img) => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.addEventListener('load', resolve, { once: true });
+          img.addEventListener('error', resolve, { once: true });
+          setTimeout(resolve, 4000);
+        });
+      })
+    );
+  });
+  await page.waitForTimeout(600);
   await page.screenshot({ path: resolve(imagens, nome + '.png'), fullPage: true });
 }
 async function login(page: Page, usuario: string) {

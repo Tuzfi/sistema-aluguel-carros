@@ -131,7 +131,7 @@ export const Veiculos: React.FC = () => {
                 src={obterFotoVeiculo(v.modelo, v.marca, v.fotoUrl)}
                 alt={`${v.marca} ${v.modelo}`}
                 className="vehicle-thumbnail"
-                loading="lazy"
+                loading="eager"
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80';
                 }}
