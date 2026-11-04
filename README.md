@@ -1,206 +1,133 @@
-# ViaCar | Sistema de Aluguel de Carros
+# ViaCar — Sistema de Aluguel de Carros
 
-<img src="docs/assets/logo.svg" alt="ViaCar" width="240">
+<img src="docs/assets/logo.svg" alt="ViaCar" width="220">
 
-Sistema web de aluguel de automóveis com cadastro de clientes, gestão de frota,
-solicitações de aluguel, análise financeira e emissão de contratos com crédito opcional.
+Projeto desenvolvido para o Laboratório 02 da disciplina Desenvolvimento e Integração de Aplicações Web (Engenharia de Software).
+Sistema web para apoio à gestão de aluguéis de veículos, contemplando solicitação, análise financeira, concessão de crédito e emissão de contratos.
 
-## Índice
+---
 
-- [Funcionalidades](#funcionalidades)
-- [Tecnologias e arquitetura](#tecnologias-e-arquitetura)
-- [Instalação e execução](#instalação-e-execução)
-- [Demonstração](#demonstração)
-- [Testes](#testes)
-- [Documentação](#documentação)
-- [Participante](#participante)
-- [Licença](#licença)
+## Contas para teste
 
-## Funcionalidades
+O banco já está configurado com contas prontas para avaliação de cada perfil do sistema:
 
-- Cadastro de clientes, login por usuário/senha, sessão, CSRF e logout.
-- Perfil com RG, CPF, nome, endereço, profissão e até três empregos/rendas.
-- Catálogo de carros e cadastro, edição e inativação da frota do próprio agente.
-- Criação, consulta, edição e cancelamento de pedidos, com histórico e controle de versão.
-- Avaliação financeira por empresas e bancos, com justificativa e parecer preservados.
-- Oferta e edição de crédito pelo banco concedente, sem operação financeira real.
-- Contratos com termos imutáveis, sem sobreposição de períodos e com transferência opcional.
-- Autorização no servidor: isolamento de clientes, conta inativa e papéis de agentes.
+| Papel | Usuário | Senha | Principais ações |
+| :--- | :--- | :--- | :--- |
+| **Cliente** | `cliente` | `123` | Escolhe automóveis no catálogo, cria pedidos, edita dados/rendas e acompanha contratos. |
+| **Empresa** | `empresa` | `123` | Gerencia a frota (cadastra carros com fotos e diárias), avalia pedidos e emite contratos. |
+| **Banco** | `banco` | `123` | Realiza avaliação financeira de pedidos e oferece propostas de crédito/financiamento. |
 
-## Tecnologias e arquitetura
+> Também é possível criar uma nova conta de cliente a qualquer momento pela tela de **Cadastro**.
 
-| Camada | Implementação |
-| --- | --- |
-| Back-end | Java 25, Spring Boot 4.0.9, Spring MVC, Security, Validation e Data JPA |
-| Banco | PostgreSQL; configuração JDBC para Supabase; Flyway V1 e V2 |
-| Build | Maven Wrapper 3.9.11 |
-| Front-end | React 19, TypeScript, Vite 8 e React Router |
-| Testes | JUnit, HTTP + PostgreSQL embarcado, Vitest e Playwright/Chromium |
-| Modelos | Casos de uso, classes, pacotes, estados e sequência em PlantUML e SVG |
+---
 
-Monólito modular MVC: controllers recebem DTOs, serviços aplicam regras e transações,
-repositórios persistem os modelos e o React constrói a apresentação. O navegador acessa
-somente a API. Senhas do banco ficam no servidor.
+## Como funciona
 
-![Visão lógica](docs/uml/v1/pacotes.svg)
+* **Cliente:** Cadastra-se com dados pessoais (RG, CPF, endereço, profissão e até 3 fontes de renda), escolhe um carro no catálogo e solicita o aluguel para um período determinado.
+* **Agentes (Empresas e Bancos):** Recebem os pedidos pendentes, analisam as informações financeiras e emitem parecer de aprovação ou reprovação com justificativa.
+* **Crédito Bancário:** Bancos podem propor ofertas de crédito vinculadas ao pedido aprovado.
+* **Contratação:** Após aprovação, a empresa ou banco proprietário emite o contrato formalizando a locação ou a transferência do veículo.
 
-```text
-backend/       API Java, Maven Wrapper, migrações e testes de integração
-frontend/      React, cliente HTTP, páginas, testes unitários e E2E
-docs/          requisitos, histórias, arquitetura, UML e screenshots
-docker-compose.yml   PostgreSQL local opcional
-```
+---
 
-## Instalação e execução
+## Tecnologias
 
-Pré-requisitos: **JDK 25, Node.js 22.12+ e npm**. O Maven Wrapper baixa o Maven no primeiro
-uso. Docker é opcional para o PostgreSQL persistente. Comandos abaixo para PowerShell,
-executados a partir da raiz do repositório.
+* **Backend:** Java 25, Spring Boot 4.0.9 (Spring MVC, Spring Security, Spring Data JPA, Flyway).
+* **Frontend:** React 19, TypeScript, Vite 8, Lucide React.
+* **Banco de Dados:** PostgreSQL hospedado no Supabase.
+* **Testes:** JUnit 5, Vitest e Playwright (testes E2E de navegador).
 
-### Demonstração local sem Docker
+---
 
-Terminal 1:
+## Como executar o projeto
+
+### Pré-requisitos
+* **JDK 25** instalado.
+* **Node.js** (versão 22.12+) e **npm**.
+
+### 1. Iniciar o Backend
+
+Abra um terminal na pasta do projeto:
 
 ```powershell
-cd frontend
-npm ci
-$env:VIACAR_DEMO_PASSWORD = 'EscolhaUmaSenhaLocal123!'
-npm run demo:api
-```
-
-Esse comando compila a aplicação, inicia PostgreSQL temporário e cria agentes fictícios
-`empresa` e `banco`, com a senha escolhida acima, além de três automóveis. Use apenas para
-demonstração local: o banco é temporário e não contém dados de produção. A API escuta
-em `http://localhost:8080`; os clientes se cadastram na interface.
-
-Terminal 2:
-
-```powershell
-cd frontend
-npm run dev
-```
-
-Abra `http://localhost:5173`. Encerre a demonstração com Ctrl+C nos dois terminais.
-
-### PostgreSQL persistente local
-
-```powershell
-docker compose up -d
-cd backend
-.\mvnw.cmd spring-boot:run '-Dspring-boot.run.profiles=local'
-```
-
-O perfil `local` usa o banco do Compose na porta 5432. O Compose inicia apenas o banco;
-execute a interface em outro terminal. Não há agentes com senha fixa nas migrações.
-
-### Supabase
-
-Defina as variáveis **no processo**, usando os dados de conexão do seu projeto:
-
-```powershell
-$env:DB_URL = 'jdbc:postgresql://HOST:5432/postgres?sslmode=require'
-$env:DB_USERNAME = 'USUARIO_DO_PROJETO'
-$env:DB_PASSWORD = 'SENHA_DO_PROJETO'
-# Somente para desenvolvimento HTTP local; em HTTPS mantenha true.
-$env:APP_COOKIE_SECURE = 'false'
 cd backend
 .\mvnw.cmd spring-boot:run
 ```
 
-`.env` não é carregado automaticamente. Consulte [ambiente](docs/ambiente.md).
-O Flyway cria o schema `viacar`; use uma conexão com suporte a JDBC/transações e permissão
-para migração. A aplicação não usa Supabase Auth nem expõe o banco ao navegador.
-O ambiente remoto não foi testado porque não foram fornecidas credenciais.
+A API iniciará em `http://localhost:8080`. As migrações do banco (Flyway V1, V2 e V3) são aplicadas automaticamente no schema `viacar`.
 
-### Provisionar agentes no banco escolhido
+> As credenciais de conexão ao Supabase ficam configuradas localmente em `backend/.env`.
 
-No mesmo ambiente de variáveis do banco, em um terminal interativo:
+### 2. Iniciar o Frontend
 
-```powershell
-cd backend
-.\mvnw.cmd test-compile dependency:build-classpath '-Dmdep.outputFile=target/classpath.txt'
-$cp = 'target/classes;' + (Get-Content target/classpath.txt -Raw).Trim()
-java -cp $cp br.edu.viacar.auth.ProvisionarAgente
-```
-
-O comando solicita usuário, papel EMPRESA/BANCO, razão social, documento e senha oculta.
-Cadastro público cria somente clientes. Não passe senha como argumento da linha de comando.
-
-### Build
+Abra outro terminal na pasta do projeto:
 
 ```powershell
-cd backend
-.\mvnw.cmd package
-# Saída: backend/target/viacar-0.2.0.jar
-cd ../frontend
-npm run build
-# Saída: frontend/dist/
+cd frontend
+npm ci
+npm run dev
 ```
 
-Em produção, sirva `dist` com fallback de SPA e encaminhe `/api` para a API na mesma
-origem HTTPS, usando cookies Secure. `vite preview` não configura esse proxy de produção.
-Não há deploy público nesta entrega.
+Acesse a interface no navegador: **`http://localhost:5173`**.
 
-## Demonstração
+---
 
-Capturas da aplicação real em navegador Chromium, usando somente dados fictícios.
+## Telas do Sistema
 
-| Login | Catálogo |
-| --- | --- |
-| ![Login](docs/screenshots/01-login.png) | ![Catálogo](docs/screenshots/02-catalogo.png) |
+| Catálogo de Veículos | Cadastro com Foto e Diária |
+| :---: | :---: |
+| ![Catálogo](docs/screenshots/02-catalogo.png) | ![Frota](docs/screenshots/05-frota.png) |
 
-| Pedido e histórico | Avaliação e crédito |
-| --- | --- |
-| ![Pedido](docs/screenshots/03-pedido.png) | ![Análise financeira](docs/screenshots/04-analise-credito.png) |
+| Solicitação de Pedido | Análise Financeira e Crédito |
+| :---: | :---: |
+| ![Pedido](docs/screenshots/03-pedido.png) | ![Análise de Crédito](docs/screenshots/04-analise-credito.png) |
 
-| Frota da empresa | Contrato emitido |
-| --- | --- |
-| ![Frota](docs/screenshots/05-frota.png) | ![Contrato](docs/screenshots/06-contrato.png) |
+| Contrato Emitido | Perfil do Cliente |
+| :---: | :---: |
+| ![Contrato](docs/screenshots/06-contrato.png) | ![Perfil](docs/screenshots/07-perfil.png) |
 
-[Perfil do cliente](docs/screenshots/07-perfil.png) · [Versão mobile](docs/screenshots/08-mobile.png)
+---
 
-## Testes
+## Testes Automatizados
 
+### Backend (Testes Unitários e Integração)
 ```powershell
 cd backend
 .\mvnw.cmd test
-cd ../frontend
-npm ci
+```
+
+### Frontend (Testes Unitários e Interface)
+```powershell
+cd frontend
 npm test
 npm run build
-npm run lint
+```
+
+### Testes End-to-End (Playwright)
+```powershell
+cd frontend
 npx playwright install chromium
 npm run test:e2e
 ```
 
-O E2E inicia sua própria API, PostgreSQL temporário e Vite nas portas 18080 e 15173,
-sem reutilizar servidores de desenvolvimento. Exercita cadastro, login, CSRF, pedido,
-edição por cliente/agente, parecer, crédito, emissão, perfil, cancelamento e exclusão lógica.
-As capturas acima são regeneradas pelo teste. [Resultados e limites](docs/revisao-commit-3.md).
+---
 
-## Documentação
+## Estrutura e Documentação
 
-- [Requisitos e decisões de domínio](docs/requisitos.md)
-- [Histórias e critérios de aceite](docs/historias.md)
-- [Arquitetura MVC](docs/arquitetura.md)
-- [Modelo de dados](docs/modelo-de-dados.md)
-- [Contrato da API](docs/api.md); OpenAPI autenticado em `/api/openapi`
-- [Interface](docs/interface.md)
-- [Modelos UML versionados](docs/uml/README.md)
-- [Plano de testes](docs/testes.md)
-- [Ambiente](docs/ambiente.md)
-- [Revisão final](docs/revisao-commit-3.md)
-- [Roteiro de apresentação](docs/roteiro-apresentacao.md)
-- [Contribuição](CONTRIBUTING.md)
+```text
+backend/     API REST em Spring Boot, regras de negócio e migrações Flyway
+frontend/    Interface web em React, componentes, catálogo e formulários
+docs/        Documentação de requisitos, modelo de dados e diagramas UML
+```
+
+* [Requisitos e Regras de Negócio](docs/requisitos.md)
+* [Histórias de Usuário](docs/historias.md)
+* [Diagramas UML (Casos de Uso, Classes, Pacotes, Sequência)](docs/uml/README.md)
+* [Modelo de Dados](docs/modelo-de-dados.md)
+* [Documentação da API](docs/api.md)
+
+---
 
 ## Participante
 
-[Keven Lino](https://github.com/Tuzfi)
-
-## Licença
-
-Licença de distribuição a definir; não foi adotada automaticamente a licença do template.
-
-Referências fornecidas: enunciado DIAW Laboratório 02, Sistema de Aluguel de Carros, e
-template de README atribuído ao Prof. Dr. João Paulo Carneiro Aramuni. Modelagem gerada
-com [PlantUML](https://plantuml.com/starting).
+* **Keven Lino** ([@Tuzfi](https://github.com/Tuzfi))

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
+import { obterFotoVeiculo } from '../utils/carImages';
 import type { Veiculo, Pedido, Pagina, TipoContrato } from '../types';
 
 export const NovoPedido: React.FC = () => {
@@ -13,17 +14,18 @@ export const NovoPedido: React.FC = () => {
   const [veiculoId, setVeiculoId] = useState(veiculoIdParam);
   const [veiculoSelecionado, setVeiculoSelecionado] = useState<Veiculo | null>(null);
 
-  // Default dates: tomorrow to tomorrow + 3 days
-  const hoje = new Date();
-  const amanha = new Date(hoje);
-  amanha.setDate(hoje.getDate() + 1);
-  const fimPadrao = new Date(amanha);
-  fimPadrao.setDate(amanha.getDate() + 3);
-
-  const formatData = (d: Date) => d.toISOString().split('T')[0];
-
-  const [inicio, setInicio] = useState(formatData(amanha));
-  const [fim, setFim] = useState(formatData(fimPadrao));
+  const [datasIniciais] = useState(() => {
+    const hoje = new Date();
+    const amanha = new Date(hoje);
+    amanha.setDate(amanha.getDate() + 1);
+    const fimPadrao = new Date(amanha);
+    fimPadrao.setDate(amanha.getDate() + 3);
+    const formatar = (data: Date) =>
+      `${data.getFullYear()}-${String(data.getMonth() + 1).padStart(2, '0')}-${String(data.getDate()).padStart(2, '0')}`;
+    return { hoje: formatar(hoje), inicio: formatar(amanha), fim: formatar(fimPadrao) };
+  });
+  const [inicio, setInicio] = useState(datasIniciais.inicio);
+  const [fim, setFim] = useState(datasIniciais.fim);
   const [tipoContrato, setTipoContrato] = useState<TipoContrato>('LOCACAO_SIMPLES');
 
   const [loading, setLoading] = useState(false);
@@ -59,7 +61,6 @@ export const NovoPedido: React.FC = () => {
     setVeiculoSelecionado(v || null);
   };
 
-  // Cálculo de diárias e total estimado
   let diarias = 0;
   let totalEstimado = '0.00';
   if (inicio && fim && veiculoSelecionado) {
@@ -126,7 +127,7 @@ export const NovoPedido: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* Veículo Selector */}
+
           <div className="form-group">
             <label className="form-label" htmlFor="veiculoId">Selecione o Automóvel *</label>
             {loadingVeiculos ? (
@@ -149,7 +150,6 @@ export const NovoPedido: React.FC = () => {
             )}
           </div>
 
-          {/* Dates */}
           <div className="grid-2">
             <div className="form-group">
               <label className="form-label" htmlFor="inicio">Data de Retirada (inclusiva) *</label>
@@ -158,7 +158,7 @@ export const NovoPedido: React.FC = () => {
                 type="date"
                 className="form-input"
                 value={inicio}
-                min={formatData(hoje)}
+                min={datasIniciais.hoje}
                 onChange={(e) => setInicio(e.target.value)}
                 required
                 disabled={loading}
@@ -172,7 +172,7 @@ export const NovoPedido: React.FC = () => {
                 type="date"
                 className="form-input"
                 value={fim}
-                min={inicio || formatData(hoje)}
+                min={inicio || datasIniciais.hoje}
                 onChange={(e) => setFim(e.target.value)}
                 required
                 disabled={loading}
@@ -180,7 +180,6 @@ export const NovoPedido: React.FC = () => {
             </div>
           </div>
 
-          {/* Tipo de Contrato */}
           <div className="form-group">
             <label className="form-label" htmlFor="tipoContrato">Modalidade Contratual *</label>
             <select
@@ -198,36 +197,49 @@ export const NovoPedido: React.FC = () => {
                 Locação com Transferência de Propriedade ao Cliente (aquisição final)
               </option>
             </select>
-            <p style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+            <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
               Na opção com transferência, a propriedade do automóvel é transferida formalmente ao seu nome no registro do contrato.
             </p>
           </div>
 
-          {/* Resumo Financeiro Dinâmico */}
           {veiculoSelecionado && (
             <div
               style={{
-                backgroundColor: '#f8fafc',
-                border: '1px solid #e2e8f0',
+                backgroundColor: '#f5f7f5',
+                border: '1px solid var(--border-color)',
                 borderRadius: '0.5rem',
                 padding: '1.25rem',
                 marginTop: '1.5rem',
                 marginBottom: '1.5rem',
               }}
             >
-              <h3 style={{ fontSize: '0.9375rem', fontWeight: 700, color: '#1e293b', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.75rem' }}>
                 Resumo da Solicitação
               </h3>
+              <div style={{ display: 'flex', gap: '0.875rem', alignItems: 'center', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border-color)' }}>
+                <img
+                  src={obterFotoVeiculo(veiculoSelecionado.modelo, veiculoSelecionado.marca, veiculoSelecionado.fotoUrl)}
+                  alt={veiculoSelecionado.modelo}
+                  style={{ width: '84px', height: '56px', borderRadius: '6px', objectFit: 'cover', border: '1px solid var(--border-color)', background: '#e2e8f0' }}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80';
+                  }}
+                />
+                <div>
+                  <div style={{ fontWeight: 600 }}>{veiculoSelecionado.marca} {veiculoSelecionado.modelo}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Placa {veiculoSelecionado.placa} · {veiculoSelecionado.ano}</div>
+                </div>
+              </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#64748b' }}>Veículo:</span>
+                <span style={{ color: 'var(--text-muted)' }}>Veículo:</span>
                 <strong>{veiculoSelecionado.marca} {veiculoSelecionado.modelo}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#64748b' }}>Diárias calculadas:</span>
+                <span style={{ color: 'var(--text-muted)' }}>Diárias calculadas:</span>
                 <strong>{diarias} {diarias === 1 ? 'diária' : 'diárias'}</strong>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
-                <span style={{ color: '#64748b' }}>Valor unitário por diária:</span>
+                <span style={{ color: 'var(--text-muted)' }}>Valor unitário por diária:</span>
                 <span>R$ {veiculoSelecionado.diaria}</span>
               </div>
               <div
@@ -235,11 +247,11 @@ export const NovoPedido: React.FC = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   fontSize: '1.125rem',
-                  fontWeight: 800,
+                  fontWeight: 600,
                   borderTop: '1px solid #cbd5e1',
                   paddingTop: '0.75rem',
                   marginTop: '0.75rem',
-                  color: '#16a34a',
+                  color: '#246144',
                 }}
               >
                 <span>Total Estimado:</span>

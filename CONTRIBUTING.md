@@ -1,12 +1,9 @@
 # Contribuição
 
-O fluxo desta entrega possui três etapas, cada uma sujeita à revisão do responsável.
-Não apresentar planejamento como implementação.
+Documente alterações nas regras, execute os testes e atualize os diagramas junto com o código.
+Preserve `docs/uml/v1` como modelo inicial; registre mudanças posteriores em uma nova versão.
 
-Use mensagens de commit com prefixos `docs:`, `feat:` ou `fix:`. Documente alterações nas
-regras, mantenha os cenários de teste rastreáveis e atualize os diagramas junto com o código.
-Preserve `docs/uml/v1` como base inicial; registre mudanças posteriores em uma nova versão.
+Não versione credenciais, arquivos `.env`, dados pessoais reais, `node_modules`, `target`
+ou logs. Registre os testes executados e suas limitações na descrição da alteração.
 
-Não versionar credenciais, arquivos `.env`, dados pessoais reais, `node_modules`, `target`
-ou artefatos de execução. Não incluir aprovação de testes que não foram executados.
-Não há remoto configurado nesta etapa. Push/deploy requer destino e autorização do responsável.
+O repositório está em https://github.com/Tuzfi/sistema-aluguel-carros.

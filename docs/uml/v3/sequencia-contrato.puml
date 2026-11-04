@@ -1,0 +1,61 @@
+@startuml
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam shadowing false
+skinparam ArrowColor #38566B
+skinparam classBackgroundColor #EFF7FA
+skinparam classBorderColor #38566B
+skinparam packageBackgroundColor #F5F8FA
+skinparam packageBorderColor #38566B
+skinparam roundcorner 8
+
+title ViaCar - Execução de contrato v3
+actor "Agente proprietário" as agente
+participant "React" as ui
+participant "Security + Controller" as api
+participant "ContratoService" as servico
+database "PostgreSQL" as db
+agente -> ui : Confirma termos e crédito opcional
+ui -> api : POST /api/pedidos/{id}/contrato\nversaoPedido, ofertaCreditoId opcional + CSRF
+api -> api : Validar sessão, papel e DTO
+api -> servico : emitir(id, dto)
+servico -> db : BEGIN; bloquear usuário do cliente,\npedido e veículo, nesta ordem
+db --> servico : Pedido, proprietário, parecer e oferta
+servico -> servico : Validar cliente ativo, versão, APROVADO, parecer corrente,\npropriedade, carro ativo e crédito elegível\nRevalidar início >= hoje e fim > início (America/Sao_Paulo)
+servico -> db : Consultar contratos com período sobreposto
+db --> servico : Disponibilidade
+opt tipo TRANSFERENCIA_AO_CLIENTE
+ servico -> db : Consultar outros contratos do veículo\ncom fim > hoje, mesmo sem sobreposição
+ db --> servico : Compromissos vigentes/futuros
+ servico -> servico : Exigir ausência desses compromissos
+end
+alt validações aprovadas
+ servico -> db : Inserir contrato e retratos imutáveis
+ servico -> db : Pedido = CONTRATADO; registrar evento
+ alt crédito selecionado
+  servico -> db : Oferta = CONTRATADA
+ else oferta existente não selecionada
+  servico -> db : Oferta = INVALIDADA
+ end
+ opt transferência ao cliente
+  servico -> db : Atualizar proprietário do veículo
+ end
+ servico -> db : COMMIT
+ servico --> api : Contrato
+ api --> ui : 201 Created + Location
+ ui --> agente : Exibir contrato
+else cliente inativo, período inválido ou outro conflito
+ servico -> db : ROLLBACK
+ servico --> api : Conflito de negócio
+ api --> ui : 409 com mensagem
+ ui --> agente : Explicar e atualizar pedido
+end
+note over api
+ Sem sessão: 401; papel proibido: 403.
+ Sessão validada no filtro; papel e propriedade no serviço.
+ Falhas no serviço revertem a transação.
+end note
+
+@enduml

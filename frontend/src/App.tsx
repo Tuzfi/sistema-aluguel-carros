@@ -39,16 +39,16 @@ const RotaProtegida: React.FC<{ children: React.ReactNode; papéisPermitidos?: s
 };
 
 export const AppContent: React.FC = () => {
+  const { usuario } = useAuth();
   return (
-    <>
+    <div className={usuario ? 'app-shell authenticated' : 'app-shell guest'}>
       <Navbar />
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main className="app-main">
         <Routes>
-          {/* Rotas Públicas */}
+
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
 
-          {/* Rotas Autenticadas Comuns */}
           <Route
             path="/"
             element={
@@ -106,7 +106,6 @@ export const AppContent: React.FC = () => {
             }
           />
 
-          {/* Rotas por Papel Específico */}
           <Route
             path="/perfil"
             element={
@@ -124,14 +123,13 @@ export const AppContent: React.FC = () => {
             }
           />
 
-          {/* Fallback */}
           <Route path="*" element={<Navigate to="/inicio" replace />} />
         </Routes>
       </main>
       <footer className="app-footer">
-        <div>ViaCar &copy; 2026 - Sistema de Aluguel de Carros | Laboratório 02 DIAW</div>
+        <div>ViaCar · Aluguel de carros</div>
       </footer>
-    </>
+    </div>
   );
 };
 

@@ -2,10 +2,9 @@
 
 ## Preparação
 
-Siga a demonstração local do [README](../README.md). Crie uma senha de demonstração no
-ambiente e inicie a API temporária e o front-end. Os agentes se chamam empresa e banco;
-clientes são cadastrados pela interface. Para usar Supabase, configure e homologue o banco
-remoto antes da apresentação; esse ambiente não foi validado nesta entrega.
+Configure o Supabase e inicie a API e a interface conforme o [README](../README.md).
+Provisione uma empresa e um banco, cadastre a frota pela conta da empresa e crie um
+cliente na interface. As credenciais ficam no ambiente local, fora do repositório.
 
 ## Comparação entre modelos e implementação
 
@@ -35,4 +34,4 @@ remoto antes da apresentação; esse ambiente não foi validado nesta entrega.
 
 [Revisão final](revisao-commit-3.md): 24 testes Java, 7 testes Vitest e 2 jornadas Playwright.
 O README contém capturas reais regeneradas pela primeira jornada, inclusive mobile.
-A suíte comprova execução local; não representa homologação do Supabase ou deploy.
+A suíte E2E usa PostgreSQL isolado. No Supabase foram verificados migrações, leitura, escrita, login e cadastro da frota. Não há deploy público.

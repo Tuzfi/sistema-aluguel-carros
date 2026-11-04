@@ -66,7 +66,6 @@ export const Pedidos: React.FC = () => {
         )}
       </div>
 
-      {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', overflowX: 'auto', paddingBottom: '0.5rem' }}>
         {[
           { label: 'Todos', value: '' },
@@ -84,7 +83,7 @@ export const Pedidos: React.FC = () => {
             style={{
               padding: '0.4rem 0.85rem',
               fontSize: '0.8125rem',
-              backgroundColor: statusFiltro === tab.value ? '#1e293b' : undefined,
+              backgroundColor: statusFiltro === tab.value ? 'var(--text-main)' : undefined,
               color: statusFiltro === tab.value ? '#ffffff' : undefined,
               whiteSpace: 'nowrap',
             }}
@@ -146,13 +145,13 @@ export const Pedidos: React.FC = () => {
                     )}
                     <td>
                       <div style={{ fontWeight: 600 }}>{p.veiculoMarca} {p.veiculoModelo}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Placa: {p.veiculoPlaca}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Placa: {p.veiculoPlaca}</div>
                     </td>
                     <td>
                       <div>{p.inicio} até {p.fim}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{p.diarias} diárias</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{p.diarias} diárias</div>
                     </td>
-                    <td style={{ fontWeight: 700, color: '#16a34a' }}>
+                    <td style={{ fontWeight: 700, color: '#246144' }}>
                       R$ {p.total}
                     </td>
                     <td style={{ fontSize: '0.8125rem' }}>

@@ -34,6 +34,7 @@ export interface Veiculo {
   modelo: string;
   placa: string;
   diaria: string;
+  fotoUrl?: string;
   proprietarioId?: string;
   proprietarioNome?: string;
   proprietarioPapel?: Papel;

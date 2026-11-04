@@ -12,7 +12,8 @@ public final class Validacao {
     }
     public static void senha(String valor) {
         int tamanho = valor == null ? 0 : valor.getBytes(StandardCharsets.UTF_8).length;
-        if (tamanho < 10 || tamanho > 72) throw RegraException.invalido("Senha deve ter de 10 a 72 bytes UTF-8.");
+        if (tamanho < 10) throw RegraException.invalido("Escolha uma senha com pelo menos 10 caracteres.");
+        if (tamanho > 72) throw RegraException.invalido("Sua senha é muito longa. Reduza o tamanho e tente novamente.");
     }
     public static String cpf(String valor) {
         if (valor == null || !valor.matches("[0-9. -]+")) throw RegraException.invalido("CPF inválido.");

@@ -1,5 +1,7 @@
 # Revisão da entrega final
 
+Registro histórico anterior à conexão do Supabase. Estado atual: [revisão da entrega](entrega.md).
+
 Verificação de 04/11/2026, em Windows, JDK 25, Node.js 24.22.1 e npm 12.2.0.
 
 ## Resultados executados

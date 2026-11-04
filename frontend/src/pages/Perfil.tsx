@@ -16,14 +16,12 @@ export const Perfil: React.FC = () => {
   const [mensagemSucesso, setMensagemSucesso] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
 
-  // Form fields
   const [nome, setNome] = useState('');
   const [rg, setRg] = useState('');
   const [endereco, setEndereco] = useState('');
   const [profissao, setProfissao] = useState('');
   const [empregos, setEmpregos] = useState<VinculoEmprego[]>([]);
 
-  // Modal encerrar conta
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -157,7 +155,7 @@ export const Perfil: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">CPF (imutável)</label>
+              <label className="form-label">CPF</label>
               <input type="text" className="form-input" value={cliente.cpf} disabled style={{ backgroundColor: '#f1f5f9' }} />
             </div>
           </div>
@@ -216,12 +214,11 @@ export const Perfil: React.FC = () => {
             />
           </div>
 
-          {/* Empregos (máximo 3) */}
-          <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.25rem' }}>
+          <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem', borderTop: '1px solid var(--border-color)', paddingTop: '1.25rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
               <div>
                 <h3 style={{ fontSize: '1rem', fontWeight: 600 }}>Fontes de Renda / Empregos (Máximo 3)</h3>
-                <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>
+                <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
                   Esses dados são usados pelos agentes bancários e empresas na avaliação financeira.
                 </p>
               </div>
@@ -238,7 +235,7 @@ export const Perfil: React.FC = () => {
             </div>
 
             {empregos.length === 0 ? (
-              <p style={{ fontSize: '0.8125rem', color: '#94a3b8', fontStyle: 'italic' }}>
+              <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
                 Nenhuma fonte de renda cadastrada.
               </p>
             ) : (
@@ -250,10 +247,10 @@ export const Perfil: React.FC = () => {
                     gap: '0.75rem',
                     alignItems: 'center',
                     marginBottom: '0.75rem',
-                    backgroundColor: '#f8fafc',
+                    backgroundColor: '#f5f7f5',
                     padding: '0.75rem',
                     borderRadius: '0.5rem',
-                    border: '1px solid #e2e8f0',
+                    border: '1px solid var(--border-color)',
                   }}
                 >
                   <div style={{ flex: 2 }}>
@@ -299,7 +296,6 @@ export const Perfil: React.FC = () => {
         </form>
       </div>
 
-      {/* Danger Zone: Encerrar Conta */}
       <div className="card" style={{ border: '1px solid #fee2e2', backgroundColor: '#fff5f5' }}>
         <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#991b1b', marginBottom: '0.375rem' }}>
           Zona de Perigo

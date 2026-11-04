@@ -1,7 +1,7 @@
 # Modelos UML versionados
 
 Modelos iniciais preservados e revisão final v3 de 04/11/2026. A revisão **v2**, de 03/11/2026, atualiza estados
-e contratação; casos de uso e pacotes permanecem na v1; classes passam à v3. Os arquivos `.puml` são a
+e contratação; casos de uso e pacotes permanecem na v1; classes e sequência usam v3. Os arquivos `.puml` são a
 fonte editável; os `.svg` são imagens geradas localmente pelo PlantUML. Não há dependência
 de renderização externa para visualizar as imagens.
 
@@ -11,7 +11,7 @@ de renderização externa para visualizar as imagens.
 | Classes de domínio | [puml](v3/classes.puml) | [SVG](v3/classes.svg) |
 | Pacotes / visão lógica | [puml](v1/pacotes.puml) | [SVG](v1/pacotes.svg) |
 | Estados do pedido | [puml](v2/estados-pedido.puml) | [SVG](v2/estados-pedido.svg) |
-| Sequência da contratação | [puml](v2/sequencia-contrato.puml) | [SVG](v2/sequencia-contrato.svg) |
+| Sequência da contratação | [puml](v3/sequencia-contrato.puml) | [SVG](v3/sequencia-contrato.svg) |
 
 ## Casos de uso
 
@@ -27,14 +27,14 @@ de renderização externa para visualizar as imagens.
 
 ## Sequência
 
-![Sequência](v2/sequencia-contrato.svg)
+![Sequência](v3/sequencia-contrato.svg)
 
 ## Histórico e regeneração
 
 | Versão | Situação | Alterações |
 | --- | --- | --- |
 | v1 | Base preservada | Domínio, atores, módulos e fluxo contratual planejados |
-| v3 | Implementação final | Referência explícita do pedido ao parecer corrente; relações persistidas por UUID e FKs |
+| v3 | Implementação final | Referência explícita do pedido ao parecer corrente; relações persistidas por UUID e FKs; sequência com endpoint e assinatura do serviço atuais |
 | v2 | Revisão das regras | Cliente inativo, período vencido e compromissos que impedem transferência; estados e sequência atualizados |
 
 Nas próximas etapas, criar nova versão quando houver mudança semântica e registrar motivo, impacto e
@@ -46,6 +46,7 @@ da raiz do projeto:
 ```powershell
 java -jar <caminho-do-plantuml.jar> -charset UTF-8 -tsvg docs/uml/v1/*.puml
 java -jar <caminho-do-plantuml.jar> -charset UTF-8 -tsvg docs/uml/v2/*.puml
+java -jar <caminho-do-plantuml.jar> -charset UTF-8 -tsvg docs/uml/v3/*.puml
 ```
 
 O JAR é ferramenta de desenvolvimento e não está incorporado ao repositório.

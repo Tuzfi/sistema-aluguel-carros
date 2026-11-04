@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { api } from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { Car, Search, ArrowRight } from 'lucide-react';
+import { obterFotoVeiculo } from '../utils/carImages';
 import type { Veiculo, Pagina } from '../types';
 
 export const Veiculos: React.FC = () => {
@@ -13,12 +14,12 @@ export const Veiculos: React.FC = () => {
   const [modelo, setModelo] = useState('');
   const [erro, setErro] = useState<string | null>(null);
 
-  const carregarVeiculos = async () => {
+  const carregarVeiculos = async (filtros = { marca, modelo }) => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
-      if (marca) params.append('marca', marca.trim());
-      if (modelo) params.append('modelo', modelo.trim());
+      if (filtros.marca) params.append('marca', filtros.marca.trim());
+      if (filtros.modelo) params.append('modelo', filtros.modelo.trim());
 
       const res = await api.get<Pagina<Veiculo>>(`/api/veiculos?${params.toString()}`);
       setVeiculos(res.items || []);
@@ -45,8 +46,8 @@ export const Veiculos: React.FC = () => {
     <div className="page-container">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Catálogo de Automóveis</h1>
-          <p className="page-subtitle">Veículos disponíveis para locação e propostas de aquisição</p>
+          <h1 className="page-title">Veículos para alugar</h1>
+          <p className="page-subtitle">Escolha o carro e confira o valor da diária.</p>
         </div>
         {isCliente && (
           <Link to="/pedidos/novo" className="btn-primary">
@@ -55,7 +56,6 @@ export const Veiculos: React.FC = () => {
         )}
       </div>
 
-      {/* Filter Bar */}
       <div className="card" style={{ marginBottom: '2rem', padding: '1.25rem' }}>
         <form onSubmit={handleFiltrar} style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'flex-end' }}>
           <div style={{ flex: '1 1 200px' }}>
@@ -93,7 +93,7 @@ export const Veiculos: React.FC = () => {
                 onClick={() => {
                   setMarca('');
                   setModelo('');
-                  setTimeout(carregarVeiculos, 0);
+                  carregarVeiculos({ marca: '', modelo: '' });
                 }}
               >
                 Limpar
@@ -124,46 +124,23 @@ export const Veiculos: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="grid-3">
+        <div className="vehicle-list">
           {veiculos.map((v) => (
-            <div key={v.id} className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <div>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>
-                      {v.marca}
-                    </span>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a' }}>
-                      {v.modelo}
-                    </h3>
-                  </div>
-                  <span style={{ fontSize: '0.8125rem', fontWeight: 600, color: '#475569', backgroundColor: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '0.25rem' }}>
-                    {v.ano}
-                  </span>
-                </div>
-
-                <div style={{ fontSize: '0.8125rem', color: '#64748b', marginBottom: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                  <div>Placa: <strong style={{ color: '#334155' }}>{v.placa}</strong></div>
-                  <div>Matrícula: {v.matricula}</div>
-                  <div>Propriedade: {v.proprietarioNome || 'Agente Registrado'}</div>
-                </div>
-              </div>
-
-              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div>
-                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Valor da diária</div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#16a34a' }}>
-                    R$ {v.diaria}
-                  </div>
-                </div>
-
-                {isCliente && (
-                  <Link to={`/pedidos/novo?veiculoId=${v.id}`} className="btn-primary-sm">
-                    Alugar <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                )}
-              </div>
-            </div>
+            <article key={v.id} className="vehicle-row">
+              <img
+                src={obterFotoVeiculo(v.modelo, v.marca, v.fotoUrl)}
+                alt={`${v.marca} ${v.modelo}`}
+                className="vehicle-thumbnail"
+                loading="lazy"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80';
+                }}
+              />
+              <div className="vehicle-identity"><p>{v.marca} · {v.ano}</p><h2>{v.modelo}</h2></div>
+              <div className="vehicle-identifiers"><div className="vehicle-plate">{v.placa}</div><p>Matrícula {v.matricula}</p></div>
+              <div><p>Por dia</p><div className="vehicle-rate">{Number(v.diaria).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</div></div>
+              {isCliente ? <Link to={`/pedidos/novo?veiculoId=${v.id}`} className="btn-secondary">Alugar <ArrowRight size={16} /></Link> : <span />}
+            </article>
           ))}
         </div>
       )}

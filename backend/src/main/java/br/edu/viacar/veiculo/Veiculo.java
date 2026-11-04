@@ -18,6 +18,7 @@ public class Veiculo extends Entidade {
     @Column(nullable=false, length=100) private String modelo;
     @Column(nullable=false, unique=true, length=7) private String placa;
     @Column(nullable=false, precision=12, scale=2) private BigDecimal diaria;
+    @Column(name="foto_url", columnDefinition="TEXT") private String fotoUrl;
     @Column(nullable=false) private UUID proprietarioId;
     @Column(nullable=false) private boolean ativo = true;
     @Version private long versao;

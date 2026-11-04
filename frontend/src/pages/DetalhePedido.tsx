@@ -28,32 +28,27 @@ export const DetalhePedido: React.FC = () => {
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
 
-  // Modal Cancelar
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelando, setCancelando] = useState(false);
 
-  // Modal Editar Pedido (Cliente)
   const [showEditModal, setShowEditModal] = useState(false);
   const [editInicio, setEditInicio] = useState('');
   const [editFim, setEditFim] = useState('');
   const [editTipo, setEditTipo] = useState<TipoContrato>('LOCACAO_SIMPLES');
   const [salvandoEdicao, setSalvandoEdicao] = useState(false);
 
-  // Modal Avaliar Pedido (Agente Empresa / Banco)
   const [showAvaliarModal, setShowAvaliarModal] = useState(false);
   const [dadosFinanceiros, setDadosFinanceiros] = useState<DadosFinanceirosCliente | null>(null);
   const [decisao, setDecisao] = useState<DecisaoAvaliacao>('APROVADO');
   const [justificativa, setJustificativa] = useState('');
   const [avaliando, setAvaliando] = useState(false);
 
-  // Modal Oferecer Crédito (Banco)
   const [showCreditoModal, setShowCreditoModal] = useState(false);
   const [creditoPrincipal, setCreditoPrincipal] = useState('');
   const [creditoTaxa, setCreditoTaxa] = useState('1.5');
   const [creditoParcelas, setCreditoParcelas] = useState(12);
   const [oferecendoCredito, setOferecendoCredito] = useState(false);
 
-  // Modal Emitir Contrato (Agente Proprietário)
   const [showContratoModal, setShowContratoModal] = useState(false);
   const [incluirCredito, setIncluirCredito] = useState(true);
   const [emitindoContrato, setEmitindoContrato] = useState(false);
@@ -105,7 +100,6 @@ export const DetalhePedido: React.FC = () => {
   const isAgente = usuario?.papel === 'EMPRESA' || usuario?.papel === 'BANCO';
   const podeModificar = ['PENDENTE', 'APROVADO', 'REPROVADO'].includes(pedido.status);
 
-  // Cancelar pedido
   const handleCancelar = async () => {
     setCancelando(true);
     try {
@@ -121,7 +115,6 @@ export const DetalhePedido: React.FC = () => {
     }
   };
 
-  // Salvar edição
   const handleSalvarEdicao = async (e: React.FormEvent) => {
     e.preventDefault();
     setSalvandoEdicao(true);
@@ -144,7 +137,6 @@ export const DetalhePedido: React.FC = () => {
     }
   };
 
-  // Abrir modal avaliação
   const abrirModalAvaliar = async () => {
     setShowAvaliarModal(true);
     setJustificativa('');
@@ -158,7 +150,6 @@ export const DetalhePedido: React.FC = () => {
     }
   };
 
-  // Enviar avaliação financeira
   const handleEnviarAvaliacao = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!justificativa.trim()) {
@@ -182,7 +173,6 @@ export const DetalhePedido: React.FC = () => {
     }
   };
 
-  // Oferecer crédito
   const handleOferecerCredito = async (e: React.FormEvent) => {
     e.preventDefault();
     setOferecendoCredito(true);
@@ -207,7 +197,6 @@ export const DetalhePedido: React.FC = () => {
     }
   };
 
-  // Emitir contrato
   const handleEmitirContrato = async () => {
     setEmitindoContrato(true);
     try {
@@ -255,9 +244,8 @@ export const DetalhePedido: React.FC = () => {
         </div>
       )}
 
-      {/* Header Card */}
       <div className="card" style={{ marginBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '1.25rem', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1.25rem', marginBottom: '1.25rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <h1 className="page-title" style={{ fontSize: '1.5rem' }}>
@@ -265,12 +253,11 @@ export const DetalhePedido: React.FC = () => {
               </h1>
               <StatusBadge status={pedido.status} />
             </div>
-            <p style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.25rem' }}>
+            <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', marginTop: '0.25rem' }}>
               Criado em: {new Date(pedido.criadoEm).toLocaleString('pt-BR')} | Versão: {pedido.versao}
             </p>
           </div>
 
-          {/* Action buttons */}
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             {podeModificar && (
               <>
@@ -343,46 +330,45 @@ export const DetalhePedido: React.FC = () => {
           </div>
         </div>
 
-        {/* Details Grid */}
         <div className="grid-3" style={{ rowGap: '1.5rem' }}>
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'none', fontWeight: 600 }}>
               Automóvel
             </div>
-            <div style={{ fontSize: '1.125rem', fontWeight: 700, color: '#1e293b' }}>
+            <div style={{ fontSize: '1.125rem', fontWeight: 700, color: 'var(--text-main)' }}>
               {pedido.veiculoMarca} {pedido.veiculoModelo}
             </div>
-            <div style={{ fontSize: '0.8125rem', color: '#475569' }}>
+            <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
               Placa: {pedido.veiculoPlaca}
             </div>
           </div>
 
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'none', fontWeight: 600 }}>
               Período de Locação
             </div>
-            <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: '#1e293b' }}>
+            <div style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-main)' }}>
               {pedido.inicio} até {pedido.fim}
             </div>
-            <div style={{ fontSize: '0.8125rem', color: '#475569' }}>
+            <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
               {pedido.diarias} diárias calculadas
             </div>
           </div>
 
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'none', fontWeight: 600 }}>
               Valores
             </div>
-            <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#16a34a' }}>
+            <div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#246144' }}>
               R$ {pedido.total}
             </div>
-            <div style={{ fontSize: '0.8125rem', color: '#64748b' }}>
+            <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
               {pedido.diarias}x de R$ {pedido.valorDiaria}
             </div>
           </div>
 
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'none', fontWeight: 600 }}>
               Modalidade
             </div>
             <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>
@@ -393,7 +379,7 @@ export const DetalhePedido: React.FC = () => {
           </div>
 
           <div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'none', fontWeight: 600 }}>
               Solicitante
             </div>
             <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>
@@ -403,7 +389,6 @@ export const DetalhePedido: React.FC = () => {
         </div>
       </div>
 
-      {/* Oferta de Crédito Ativa */}
       {ofertaAtiva && (
         <div className="card" style={{ marginBottom: '1.5rem', backgroundColor: '#f0fdf4', borderColor: '#bbf7d0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
@@ -420,14 +405,13 @@ export const DetalhePedido: React.FC = () => {
         </div>
       )}
 
-      {/* Linha do Tempo de Pareceres e Eventos */}
       <div className="card">
         <h2 style={{ fontSize: '1.125rem', fontWeight: 700, marginBottom: '1rem' }}>
           Histórico de Eventos e Pareceres Financeiros
         </h2>
 
         {(pedido.eventos || []).length === 0 ? (
-          <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Nenhum evento registrado.</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Nenhum evento registrado.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {(pedido.eventos || []).map((ev) => (
@@ -437,20 +421,20 @@ export const DetalhePedido: React.FC = () => {
                   display: 'flex',
                   gap: '1rem',
                   alignItems: 'flex-start',
-                  borderLeft: '2px solid #e2e8f0',
+                  borderLeft: '2px solid var(--border-color)',
                   paddingLeft: '1rem',
                   marginLeft: '0.5rem',
                 }}
               >
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <strong style={{ fontSize: '0.875rem', color: '#1e293b' }}>{ev.descricao}</strong>
-                    <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                    <strong style={{ fontSize: '0.875rem', color: 'var(--text-main)' }}>{ev.descricao}</strong>
+                    <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       {new Date(ev.criadoEm).toLocaleString('pt-BR')}
                     </span>
                   </div>
                   {ev.autorNome && (
-                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       Autor: {ev.autorNome}
                     </div>
                   )}
@@ -469,7 +453,6 @@ export const DetalhePedido: React.FC = () => {
         </div>
       ))}
 
-      {/* Modal Cancelar Pedido */}
       <ConfirmModal
         isOpen={showCancelModal}
         title="Cancelar este pedido de locação?"
@@ -482,7 +465,6 @@ export const DetalhePedido: React.FC = () => {
         onCancel={() => setShowCancelModal(false)}
       />
 
-      {/* Modal Editar Pedido (Cliente) */}
       {showEditModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -550,7 +532,6 @@ export const DetalhePedido: React.FC = () => {
         </div>
       )}
 
-      {/* Modal Avaliação Financeira (Agentes) */}
       {showAvaliarModal && (
         <div className="modal-overlay">
           <div className="modal-content" style={{ maxWidth: '580px' }}>
@@ -563,16 +544,16 @@ export const DetalhePedido: React.FC = () => {
             <form onSubmit={handleEnviarAvaliacao}>
               <div className="modal-body">
                 {dadosFinanceiros && (
-                  <div style={{ backgroundColor: '#f8fafc', padding: '0.875rem', borderRadius: '0.5rem', border: '1px solid #e2e8f0', marginBottom: '1.25rem' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                  <div style={{ backgroundColor: '#f5f7f5', padding: '0.875rem', borderRadius: '0.5rem', border: '1px solid var(--border-color)', marginBottom: '1.25rem' }}>
+                    <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'none', marginBottom: '0.25rem' }}>
                       Comprovação Financeira do Cliente
                     </div>
                     <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>{dadosFinanceiros.nome} (Profissão: {dadosFinanceiros.profissao})</div>
-                    <div style={{ fontSize: '0.8125rem', color: '#16a34a', fontWeight: 700, marginTop: '0.25rem' }}>
+                    <div style={{ fontSize: '0.8125rem', color: '#246144', fontWeight: 700, marginTop: '0.25rem' }}>
                       Renda Total Declarada: R$ {dadosFinanceiros.rendaTotal}
                     </div>
                     {dadosFinanceiros.empregos.length > 0 && (
-                      <div style={{ marginTop: '0.5rem', fontSize: '0.8125rem', color: '#475569' }}>
+                      <div style={{ marginTop: '0.5rem', fontSize: '0.8125rem', color: 'var(--text-muted)' }}>
                         Fontes: {dadosFinanceiros.empregos.map(e => `${e.empregador} (R$ ${e.rendaMensal})`).join(' | ')}
                       </div>
                     )}
@@ -582,7 +563,7 @@ export const DetalhePedido: React.FC = () => {
                 <div className="form-group">
                   <label className="form-label">Decisão do Parecer *</label>
                   <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.25rem' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600, color: '#16a34a' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontWeight: 600, color: '#246144' }}>
                       <input
                         type="radio"
                         name="decisao"
@@ -631,7 +612,6 @@ export const DetalhePedido: React.FC = () => {
         </div>
       )}
 
-      {/* Modal Oferta de Crédito (Banco) */}
       {showCreditoModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -643,7 +623,7 @@ export const DetalhePedido: React.FC = () => {
             </div>
             <form onSubmit={handleOferecerCredito}>
               <div className="modal-body">
-                <p style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '1rem' }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '1rem' }}>
                   Conceda financiamento opcional para a locação deste pedido aprovado.
                 </p>
 
@@ -658,7 +638,7 @@ export const DetalhePedido: React.FC = () => {
                     placeholder={pedido.total}
                     required
                   />
-                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                     Máximo permitido: R$ {pedido.total}
                   </span>
                 </div>
@@ -704,7 +684,6 @@ export const DetalhePedido: React.FC = () => {
         </div>
       )}
 
-      {/* Modal Emitir Contrato */}
       {showContratoModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -715,7 +694,7 @@ export const DetalhePedido: React.FC = () => {
               </button>
             </div>
             <div className="modal-body">
-              <p style={{ fontSize: '0.875rem', color: '#334155', marginBottom: '1rem' }}>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-main)', marginBottom: '1rem' }}>
                 A emissão do contrato é atômica e definitiva: o pedido passará ao status <strong>CONTRATADO</strong>, bloqueando quaisquer sobreposições de reserva no automóvel.
               </p>
 

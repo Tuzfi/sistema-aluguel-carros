@@ -56,7 +56,7 @@ export const Cadastro: React.FC = () => {
 
     try {
       await api.post('/api/auth/cadastro', body);
-      // Auto-login
+
       await login(usuario, senha);
       navigate('/inicio');
     } catch (err: any) {
@@ -70,13 +70,9 @@ export const Cadastro: React.FC = () => {
   };
 
   return (
-    <div className="page-container" style={{ maxWidth: '640px' }}>
-      <div className="card">
-        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-          <img src="/logo.svg" alt="ViaCar" style={{ height: '44px', margin: '0 auto 0.5rem auto' }} />
-          <h1 className="page-title" style={{ fontSize: '1.5rem' }}>Cadastro de Cliente</h1>
-          <p className="page-subtitle">Preencha seus dados para começar a solicitar veículos</p>
-        </div>
+    <div className="page-container registration-page">
+      <div className="registration-sheet">
+        <header className="form-intro"><h1 className="page-title">Criar sua conta</h1><p className="page-subtitle">Seus dados para escolher um carro e acompanhar o aluguel.</p><p className="form-hint">Campos com * são obrigatórios.</p></header>
 
         {erro && (
           <div className="alert alert-danger" role="alert">
@@ -86,6 +82,7 @@ export const Cadastro: React.FC = () => {
         )}
 
         <form onSubmit={handleSubmit}>
+          <section className="form-section"><div className="section-copy"><h2>Acesso</h2><p>Escolha como você vai entrar na sua conta.</p></div><div className="section-fields">
           <div className="grid-2">
             <div className="form-group">
               <label className="form-label" htmlFor="usuario">Nome de Usuário *</label>
@@ -103,9 +100,12 @@ export const Cadastro: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label" htmlFor="senha">Senha * (10 a 72 bytes UTF-8)</label>
+              <label className="form-label" htmlFor="senha">Senha *</label>
               <input
                 id="senha"
+                aria-describedby="senha-ajuda"
+                autoComplete="new-password"
+                minLength={10}
                 type="password"
                 className={`form-input ${camposErro.senha ? 'has-error' : ''}`}
                 value={senha}
@@ -114,10 +114,13 @@ export const Cadastro: React.FC = () => {
                 required
                 disabled={loading}
               />
+              <span className="form-hint" id="senha-ajuda">Use pelo menos 10 caracteres.</span>
               {camposErro.senha && <span className="error-text">{camposErro.senha}</span>}
             </div>
           </div>
 
+          </div></section>
+          <section className="form-section"><div className="section-copy"><h2>Dados pessoais</h2><p>Essas informações serão usadas no seu pedido de aluguel.</p></div><div className="section-fields">
           <div className="form-group">
             <label className="form-label" htmlFor="nome">Nome Completo *</label>
             <input
@@ -197,32 +200,12 @@ export const Cadastro: React.FC = () => {
             </div>
           </div>
 
-          {/* Empregos (máximo 3) */}
-          <div style={{ marginTop: '1.25rem', marginBottom: '1.5rem', borderTop: '1px solid #e2e8f0', paddingTop: '1.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-              <div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#1e293b' }}>
-                  Fontes de Renda / Empregadores
-                </h3>
-                <p style={{ fontSize: '0.8125rem', color: '#64748b' }}>
-                  Informe até 3 fontes de rendimento (opcional para cadastro).
-                </p>
-              </div>
-              {empregos.length < 3 && (
-                <button
-                  type="button"
-                  onClick={handleAddEmprego}
-                  className="btn-secondary"
-                  style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
-                >
-                  <Plus className="w-3.5 h-3.5" /> Adicionar Renda
-                </button>
-              )}
-            </div>
-
+          </div></section>
+          <section className="form-section"><div className="section-copy"><h2>Renda</h2><p>Opcional. Você pode informar até três fontes de renda para a análise do pedido.</p></div><div className="section-fields">
+            <div className="income-heading"><h3>Fontes de renda</h3>{empregos.length < 3 && <button type="button" onClick={handleAddEmprego} className="btn-secondary"><Plus size={16} /> Adicionar Renda</button>}</div>
             {empregos.length === 0 && (
-              <p style={{ fontSize: '0.8125rem', color: '#94a3b8', fontStyle: 'italic' }}>
-                Nenhum vínculo informado no momento.
+              <p style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                Você pode preencher a renda agora ou depois, no seu perfil.
               </p>
             )}
 
@@ -231,13 +214,14 @@ export const Cadastro: React.FC = () => {
                 key={idx}
                 style={{
                   display: 'flex',
+                  flexWrap: 'wrap',
                   gap: '0.75rem',
                   alignItems: 'flex-start',
                   marginBottom: '0.75rem',
-                  backgroundColor: '#f8fafc',
+                  backgroundColor: '#f5f7f5',
                   padding: '0.75rem',
                   borderRadius: '0.5rem',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--border-color)',
                 }}
               >
                 <div style={{ flex: 2 }}>
@@ -246,6 +230,7 @@ export const Cadastro: React.FC = () => {
                     className="form-input"
                     value={emp.empregador}
                     onChange={(e) => handleEmpregoChange(idx, 'empregador', e.target.value)}
+                    aria-label={`Empregador ${idx + 1}`}
                     placeholder="Empresa / Empregador"
                     required
                   />
@@ -256,6 +241,7 @@ export const Cadastro: React.FC = () => {
                     className="form-input"
                     value={emp.rendaMensal}
                     onChange={(e) => handleEmpregoChange(idx, 'rendaMensal', e.target.value)}
+                    aria-label={`Renda mensal ${idx + 1}`}
                     placeholder="Renda (ex: 3500.00)"
                     required
                   />
@@ -274,6 +260,7 @@ export const Cadastro: React.FC = () => {
             ))}
           </div>
 
+          </section>
           <button
             type="submit"
             className="btn-primary"
@@ -285,9 +272,9 @@ export const Cadastro: React.FC = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: '1.25rem', textAlign: 'center', fontSize: '0.875rem', color: '#64748b' }}>
+        <div style={{ marginTop: '1.25rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           Já possui conta?{' '}
-          <Link to="/login" style={{ color: '#2563eb', fontWeight: 600 }}>
+          <Link to="/login" style={{ color: 'var(--text-main)', fontWeight: 600 }}>
             Entrar
           </Link>
         </div>

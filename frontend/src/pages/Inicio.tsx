@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { listarPedidos } from '../api/pedidos';
 import { StatusBadge } from '../components/StatusBadge';
-import { Car, FileText, User, ArrowRight, Clock, ShieldCheck, Plus } from 'lucide-react';
+import { Car, ArrowRight, Clock, Plus } from 'lucide-react';
 import type { Pedido } from '../types';
 
 export const Inicio: React.FC = () => {
@@ -33,9 +33,9 @@ export const Inicio: React.FC = () => {
     <div className="page-container">
       <div className="page-header">
         <div>
-          <h1 className="page-title">Bem-vindo, {usuario.usuario}!</h1>
+          <h1 className="page-title">Visão geral</h1>
           <p className="page-subtitle">
-            Painel principal do sistema ViaCar | Sistema de Aluguel de Carros
+            {isCliente ? 'Seus aluguéis, do pedido à entrega das chaves.' : 'Pedidos de aluguel e veículos da sua conta.'}
           </p>
         </div>
         {isCliente && (
@@ -50,80 +50,23 @@ export const Inicio: React.FC = () => {
         )}
       </div>
 
-      {/* Action shortcuts */}
-      <div className="grid-3" style={{ marginBottom: '2rem' }}>
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-              <div style={{ backgroundColor: '#eff6ff', padding: '0.625rem', borderRadius: '0.5rem', color: '#2563eb' }}>
-                <Car className="w-6 h-6" />
-              </div>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>Catálogo de Veículos</h3>
-            </div>
-            <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-              Explore todos os automóveis disponíveis no sistema, marcas, modelos e diárias.
-            </p>
-          </div>
-          <Link to="/veiculos" className="btn-secondary" style={{ marginTop: '1.25rem', width: '100%' }}>
-            Acessar Catálogo <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-              <div style={{ backgroundColor: '#ecfdf5', padding: '0.625rem', borderRadius: '0.5rem', color: '#16a34a' }}>
-                <FileText className="w-6 h-6" />
-              </div>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>
-                {isCliente ? 'Meus Pedidos' : 'Fila de Análise'}
-              </h3>
-            </div>
-            <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-              {isCliente
-                ? 'Consulte o andamento, emita ou cancele seus pedidos de locação.'
-                : 'Analise pedidos de clientes, emita pareceres e formalize contratos.'}
-            </p>
-          </div>
-          <Link to="/pedidos" className="btn-secondary" style={{ marginTop: '1.25rem', width: '100%' }}>
-            Ver Pedidos <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem' }}>
-              <div style={{ backgroundColor: '#f5f3ff', padding: '0.625rem', borderRadius: '0.5rem', color: '#7c3aed' }}>
-                {isCliente ? <User className="w-6 h-6" /> : <ShieldCheck className="w-6 h-6" />}
-              </div>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: 700 }}>
-                {isCliente ? 'Perfil & Renda' : 'Gestão de Frota'}
-              </h3>
-            </div>
-            <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-              {isCliente
-                ? 'Mantenha seus dados e até 3 fontes de rendimento atualizados para as avaliações.'
-                : 'Gerencie os veículos cadastrados sob propriedade da sua organização.'}
-            </p>
-          </div>
-          <Link to={isCliente ? '/perfil' : '/frota'} className="btn-secondary" style={{ marginTop: '1.25rem', width: '100%' }}>
-            {isCliente ? 'Gerenciar Perfil' : 'Gerenciar Frota'} <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
+      <div className="home-shortcuts">
+        <Link to="/veiculos"><div><strong>Escolher um carro</strong><p>Consulte modelos e valores das diárias.</p></div><ArrowRight size={18} /></Link>
+        <Link to="/pedidos"><div><strong>{isCliente ? 'Acompanhar pedidos' : 'Analisar pedidos'}</strong><p>{isCliente ? 'Veja o andamento dos seus aluguéis.' : 'Consulte os pedidos e registre seu parecer.'}</p></div><ArrowRight size={18} /></Link>
+        <Link to={isCliente ? '/perfil' : '/frota'}><div><strong>{isCliente ? 'Atualizar meu perfil' : 'Cuidar da frota'}</strong><p>{isCliente ? 'Seus dados e fontes de renda.' : 'Cadastre carros e atualize as diárias.'}</p></div><ArrowRight size={18} /></Link>
       </div>
 
-      {/* Recent orders */}
       <div className="card">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
           <div>
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>
               {isCliente ? 'Meus Pedidos Recentes' : 'Últimos Pedidos na Fila'}
             </h2>
-            <p style={{ fontSize: '0.875rem', color: '#64748b' }}>
-              Acompanhamento de status e transições
+            <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>
+              Confira o andamento dos últimos pedidos.
             </p>
           </div>
-          <Link to="/pedidos" style={{ fontSize: '0.875rem', color: '#2563eb', fontWeight: 600 }}>
+          <Link to="/pedidos" style={{ fontSize: '0.875rem', color: 'var(--text-main)', fontWeight: 600 }}>
             Ver todos
           </Link>
         </div>
@@ -167,14 +110,14 @@ export const Inicio: React.FC = () => {
                     </td>
                     <td>
                       <div style={{ fontWeight: 600 }}>{p.veiculoMarca} {p.veiculoModelo}</div>
-                      <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Placa: {p.veiculoPlaca}</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Placa: {p.veiculoPlaca}</div>
                     </td>
                     <td>
                       <div>{p.inicio} até {p.fim}</div>
                     </td>
                     <td>
                       <div>{p.diarias}x R$ {p.valorDiaria}</div>
-                      <div style={{ fontWeight: 700, color: '#16a34a' }}>R$ {p.total}</div>
+                      <div style={{ fontWeight: 700, color: '#246144' }}>R$ {p.total}</div>
                     </td>
                     <td style={{ fontSize: '0.8125rem' }}>
                       {p.tipoContrato === 'LOCACAO_SIMPLES' ? 'Locação Simples' : 'Transferência ao Cliente'}

@@ -69,7 +69,7 @@ Front-end: Vitest para comportamentos relevantes e Playwright para jornadas inte
 Não usar H2 como evidência de semântica PostgreSQL. O Supabase exige validação própria
 quando houver conexão; registrar separadamente testes locais e remotos.
 
-## Resultado desta etapa
+## Registro da modelagem inicial
 
 Commit 1 não contém aplicação. A verificação se limita aos arquivos e modelos do projeto.
 O relatório da revisão lista os checks realmente executados; nenhum cenário T01-T16 é
@@ -78,6 +78,6 @@ marcado como aprovado antecipadamente.
 
 ## Execução final
 
-Resultados de 04/11/2026 e limites em [revisão final](revisao-commit-3.md).
+Resultados da revisão de entrega e limites em [Entrega](entrega.md).
 As jornadas de navegador estão em frontend/e2e/jornada.spec.ts; os testes de DTO
 estão em frontend/src/test/adapters.test.ts.

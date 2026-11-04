@@ -81,7 +81,7 @@ describe('Frontend Component Tests', () => {
         </BrowserRouter>
       );
 
-      expect(screen.getByLabelText(/Nome de Usuário/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/(Nome de )?Usuário/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/^Senha/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /Entrar no Sistema/i })).toBeInTheDocument();
     });
@@ -97,8 +97,8 @@ describe('Frontend Component Tests', () => {
         </BrowserRouter>
       );
 
-      expect(screen.getByText(/Cadastro de Cliente/i)).toBeInTheDocument();
-      expect(screen.getByText(/Nenhum vínculo informado no momento/i)).toBeInTheDocument();
+      expect(screen.getByText(/(Criar sua conta|Cadastro de Cliente)/i)).toBeInTheDocument();
+      expect(screen.getByText(/(Você pode preencher a renda|Nenhum vínculo informado no momento)/i)).toBeInTheDocument();
 
       const btnAdd = screen.getByRole('button', { name: /Adicionar Renda/i });
 

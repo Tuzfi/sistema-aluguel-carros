@@ -70,5 +70,6 @@ public class VeiculoService {
         if(!placa.matches("[A-Z]{3}[0-9][A-Z0-9][0-9]{2}")) throw RegraException.invalido("Placa inválida.");
         v.setMatricula(dto.matricula().strip()); v.setAno(dto.ano()); v.setMarca(dto.marca().strip()); v.setModelo(dto.modelo().strip());
         v.setPlaca(placa); v.setDiaria(Validacao.dinheiro(dto.diaria()));
+        v.setFotoUrl(dto.fotoUrl() != null && !dto.fotoUrl().isBlank() ? dto.fotoUrl().trim() : null);
     }
 }

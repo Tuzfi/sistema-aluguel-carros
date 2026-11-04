@@ -25,20 +25,16 @@ export const Login: React.FC = () => {
       await login(usuario, senha);
       navigate('/inicio');
     } catch (err: any) {
-      setErro(err.message || 'Falha ao entrar. Verifique suas credenciais.');
+      setErro(err.message || 'Falha ao entrar. Confira seu usuário e sua senha.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="page-container" style={{ maxWidth: '440px', marginTop: '2rem' }}>
-      <div className="card">
-        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-          <img src="/logo.svg" alt="ViaCar" style={{ height: '48px', margin: '0 auto 0.75rem auto' }} />
-          <h1 className="page-title" style={{ fontSize: '1.5rem' }}>Acessar o ViaCar</h1>
-          <p className="page-subtitle">Entre com suas credenciais para gerenciar seus aluguéis</p>
-        </div>
+    <div className="page-container login-page">
+      <div className="login-sheet">
+        <header className="form-intro"><h1 className="page-title">Entrar na sua conta</h1><p className="page-subtitle">Acompanhe seus pedidos e os próximos aluguéis.</p></header>
 
         {erro && (
           <div className="alert alert-danger" role="alert">
@@ -49,7 +45,7 @@ export const Login: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label className="form-label" htmlFor="usuario">Nome de Usuário</label>
+            <label className="form-label" htmlFor="usuario">Usuário</label>
             <input
               id="usuario"
               type="text"
@@ -89,10 +85,10 @@ export const Login: React.FC = () => {
           </button>
         </form>
 
-        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: '#64748b' }}>
+        <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-muted)' }}>
           Não tem uma conta de cliente?{' '}
-          <Link to="/cadastro" style={{ color: '#2563eb', fontWeight: 600 }}>
-            Cadastre-se aqui
+          <Link to="/cadastro" style={{ color: 'var(--text-main)', fontWeight: 600 }}>
+            Criar conta
           </Link>
         </div>
       </div>
