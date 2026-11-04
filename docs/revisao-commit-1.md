@@ -2,7 +2,7 @@
 
 ## O que revisar
 
-1. Escopo de três commits em [plano](plano-de-entrega.md).
+1. Requisitos do PDF e decisões adicionais D01-D13 em [requisitos](requisitos.md).
 2. Requisitos do PDF e decisões adicionais D01-D13 em [requisitos](requisitos.md).
 3. Regras de estados, titularidade e crédito em [modelo de dados](modelo-de-dados.md).
 4. Perfis, segurança e divisão MVC em [arquitetura](arquitetura.md).

@@ -1,7 +1,7 @@
 # Contribuição
 
 O fluxo desta entrega possui três etapas, cada uma sujeita à revisão do responsável.
-Consulte [o plano](docs/plano-de-entrega.md). Não apresentar planejamento como implementação.
+Não apresentar planejamento como implementação.
 
 Use mensagens de commit com prefixos `docs:`, `feat:` ou `fix:`. Documente alterações nas
 regras, mantenha os cenários de teste rastreáveis e atualize os diagramas junto com o código.
