@@ -43,7 +43,7 @@ foram aplicadas em PostgreSQL 14.22 temporário. Não foi usado H2.
 
 - Supabase: integração JDBC configurada, mas homologação remota pendente de credenciais.
 - Sem deploy público; o repositório GitHub é privado.
-- Autoria acadêmica e licença devem ser definidas pelo responsável.
+- Participante: Keven Lino. Licença de distribuição a definir.
 - Lint emite avisos de estilo/hooks; não foram tratados como prova de falha funcional.
 - Não há pagamento, assinatura digital ou transferência jurídica real de propriedade.
 

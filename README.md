@@ -22,7 +22,8 @@ Repositório: [Tuzfi/sistema-aluguel-carros](https://github.com/Tuzfi/sistema-al
 - [Demonstração](#demonstração)
 - [Testes](#testes)
 - [Documentação](#documentação)
-- [Autoria e licença](#autoria-e-licença)
+- [Participante](#participante)
+- [Licença](#licença)
 
 ## Funcionalidades
 
@@ -201,10 +202,12 @@ As capturas acima são regeneradas pelo teste. [Resultados e limites](docs/revis
 - [Roteiro de apresentação](docs/roteiro-apresentacao.md)
 - [Contribuição](CONTRIBUTING.md)
 
-## Autoria e licença
+## Participante
 
-Projeto desenvolvido com auxílio de ferramentas de IA e revisão do responsável. Os nomes
-dos integrantes acadêmicos devem ser informados pela equipe antes da apresentação.
+[Keven Lino](https://github.com/Tuzfi)
+
+## Licença
+
 Licença de distribuição a definir; não foi adotada automaticamente a licença do template.
 
 Referências fornecidas: enunciado DIAW Laboratório 02, Sistema de Aluguel de Carros, e

@@ -5,8 +5,6 @@
 O PDF fornecido (páginas 1 a 3) define o domínio, a stack, a modelagem e a apresentação.
 O README fornecido é uma referência de documentação: seus exemplos de mobile, cloud,
 pagamentos, JWT e outros recursos não constituem requisitos deste laboratório.
-A solicitação do usuário define o processo: projetar tudo, dividir em três commits, criar
-em Documentos e parar após o primeiro para revisão, conforme confirmação no chat.
 
 ## Requisitos funcionais
 
