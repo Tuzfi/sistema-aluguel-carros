@@ -12,7 +12,7 @@ Entrega final local: API, interface integrada, documentação e capturas reais. 
 está registrada em [revisão final](docs/revisao-commit-3.md). A conexão remota ao Supabase
 permanece **pendente de credenciais e homologação**; os testes usam PostgreSQL real temporário.
 
-Repositório: [Tuzfi/sistema-aluguel-carros](https://github.com/Tuzfi/sistema-aluguel-carros) (privado).
+Repositório: [Tuzfi/sistema-aluguel-carros](https://github.com/Tuzfi/sistema-aluguel-carros)
 
 ## Índice
 
