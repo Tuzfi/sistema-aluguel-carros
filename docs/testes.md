@@ -74,3 +74,10 @@ quando houver conexão; registrar separadamente testes locais e remotos.
 Commit 1 não contém aplicação. A verificação se limita aos arquivos e modelos do projeto.
 O relatório da revisão lista os checks realmente executados; nenhum cenário T01-T16 é
 marcado como aprovado antecipadamente.
+
+
+## Execução final
+
+Resultados de 04/11/2026 e limites em [revisão final](revisao-commit-3.md).
+As jornadas de navegador estão em frontend/e2e/jornada.spec.ts; os testes de DTO
+estão em frontend/src/test/adapters.test.ts.

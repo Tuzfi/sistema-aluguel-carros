@@ -18,5 +18,5 @@ public final class PedidoDto {
     public record Evento(UUID id, UUID autorId, String acao, StatusPedido statusAnterior, StatusPedido statusNovo, int revisao, Instant criadoEm) {
         public static Evento de(EventoPedido e) { return new Evento(e.getId(),e.getAutorId(),e.getAcao(),e.getStatusAnterior(),e.getStatusNovo(),e.getRevisao(),e.getCriadoEm()); }
     }
-    public record Detalhe(Resumo pedido, List<AvaliacaoResumo> avaliacoes, List<Evento> eventos, List<ContratoDto.Oferta> ofertas, UUID contratoId) {}
+    public record Detalhe(Resumo pedido, List<AvaliacaoResumo> avaliacoes, List<Evento> eventos, List<ContratoDto.Oferta> ofertas, UUID contratoId, boolean podeContratar, UUID agenteAtualId) {}
 }

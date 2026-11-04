@@ -1,4 +1,4 @@
-# Contrato HTTP proposto
+# Contrato HTTP implementado
 
 Base `/api`. JSON UTF-8, IDs UUID, datas `YYYY-MM-DD`, timestamps ISO 8601 UTC.
 Decimais monetários transmitidos como strings (ex.: `"150.00"`) para preservar precisão.
@@ -81,4 +81,12 @@ Erro proposto:
 }
 ```
 
-Documentação OpenAPI executável será acrescentada junto à API, refletindo as rotas efetivas.
+Documentação OpenAPI autenticada disponível em `/api/openapi`.
+
+`GET /pedidos/{id}` retorna `{ pedido, avaliacoes, eventos, ofertas, contratoId,
+podeContratar, agenteAtualId }`. O resumo fica em `pedido`, com os campos `diaria` e
+`total`. As capacidades auxiliam a interface; a autorização continua no servidor.
+`GET /contratos/{id}` retorna metadados e o retrato imutável em `termos`, incluindo
+cliente, veículo, período, diária, total, emissor e crédito/banco quando houver.
+`GET /veiculos?meus=true` retorna a frota do agente, inclusive veículos inativos.
+A interface adapta esses DTOs em `frontend/src/api/pedidos.ts`.

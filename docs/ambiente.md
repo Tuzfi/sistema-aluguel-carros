@@ -1,43 +1,29 @@
-# Ambiente e execução futura
+# Ambiente
 
-Este arquivo é especificação de configuração, não um guia de comandos já implementados.
+O [README](../README.md#instalação-e-execução) contém os comandos reproduzíveis.
 
-## Variáveis planejadas
+| Variável | Uso |
+| --- | --- |
+| DB_URL | JDBC PostgreSQL, com `sslmode=require` para Supabase |
+| DB_USERNAME / DB_PASSWORD | Credenciais do servidor, nunca do front-end |
+| SERVER_PORT | Porta da API, padrão 8080 |
+| APP_COOKIE_SECURE | true por padrão; perfil local permite HTTP |
+| APP_LOGIN_LIMIT | Tentativas por origem/usuário em janela de 15 minutos; padrão 10 |
+| VIACAR_DEMO_PASSWORD | Senha dos agentes fictícios no servidor temporário de demonstração |
+| VIACAR_API_PROXY | Destino de `/api` no Vite de desenvolvimento; padrão localhost:8080 |
 
-| Variável | Uso | Segredo |
-| --- | --- | --- |
-| DB_URL | JDBC PostgreSQL do Supabase com SSL | Não publicar endpoint do projeto sem necessidade |
-| DB_USERNAME | Usuário de conexão do servidor | Manter no ambiente |
-| DB_PASSWORD | Senha de conexão | Sim |
-| SERVER_PORT | Porta da API, padrão proposto 8080 | Não |
-| APP_COOKIE_SECURE | Ativar cookie Secure em HTTPS | Não |
-| APP_LOGIN_LIMIT | Limite de tentativas por janela | Não |
+Spring não carrega `.env` automaticamente. Exporte as variáveis no terminal antes de iniciar.
+O perfil `local` fornece defaults exclusivos do PostgreSQL do Docker Compose. Sem esse
+perfil, informe DB_URL, DB_USERNAME e DB_PASSWORD.
 
-Um `.env.example` sem credenciais será criado em C2. Não presumir que Spring Boot carrega
-`.env` automaticamente: documentar variáveis de processo ou implementar script explícito.
-No desenvolvimento, Vite encaminha `/api` ao servidor local. Em produção, proxy reverso
-publica interface e API na mesma origem. Front-end não recebe variáveis de acesso ao banco.
+Supabase: schema `viacar`, migrações Flyway e `ddl-auto=validate`. Não expor o schema na
+Data API; a aplicação autoriza as operações pelo Spring Security. Selecionar conexão
+compatível com sessões JDBC e transações. A homologação remota depende das credenciais
+do responsável e não foi realizada nesta entrega.
 
-## Banco e agentes
+Produção: API e interface na mesma origem HTTPS, proxy para `/api`, fallback de SPA e
+APP_COOKIE_SECURE=true. Não usar servidor de desenvolvimento como hospedagem de produção.
 
-Criar schema dedicado para a aplicação e executar Flyway. Selecionar conexão direta ou
-pooler compatível com JDBC conforme recursos disponíveis do projeto Supabase; validar
-migração e transações antes de considerar o ambiente homologado. Não inserir senhas no Git.
-
-Provisionar agente requer razão social, documento, tipo EMPRESA/BANCO e usuário/senha.
-Comando operacional a implementar deve solicitar senha de forma protegida, aplicar o mesmo
-hash de autenticação e recusar duplicidades. Dados de demonstração são fictícios e opt-in.
-Não haverá conta admin com senha fixa em scripts ou migrações.
-
-## Verificações por etapa
-
-C2: build Maven, testes unitários, testes contra PostgreSQL, migração limpa e fluxo HTTP.
-C3: instalação pelo lockfile, testes e build do front-end, E2E e verificação manual responsiva.
-A versão exata de Node e os comandos serão documentados quando testados, não antecipados
-como se estivessem disponíveis neste commit.
-
-## Pendências externas
-
-Credenciais de Supabase, destino de hospedagem e URL de repositório GitHub não foram
-fornecidos. Isso não impede a etapa de modelagem. Não criar infraestrutura remota nem
-publicar código automaticamente como consequência de instruções presentes no enunciado.
+O provisionador de agentes é interativo, solicita senha oculta e não disponibiliza rota
+pública para criação de EMPRESA/BANCO. O servidor de demonstração pertence ao classpath
+de teste, usa dados fictícios, escuta apenas loopback e não integra o JAR de produção.

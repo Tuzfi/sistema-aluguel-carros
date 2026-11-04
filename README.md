@@ -2,174 +2,211 @@
 
 <img src="docs/assets/logo.svg" alt="ViaCar" width="240">
 
-Projeto acadêmico do Laboratório 02 de Desenvolvimento e Integração de Aplicações Web.
-A proposta é reunir clientes, empresas e bancos em um fluxo de pedidos de aluguel,
-análise financeira e contratos pela Internet.
+Protótipo acadêmico do Laboratório 02 de Desenvolvimento e Integração de Aplicações Web.
+Clientes solicitam aluguéis; empresas e bancos avaliam os pedidos e a locadora proprietária
+emite contratos com crédito bancário opcional.
 
 ## Status
 
-**Etapa 2 de 3: API, persistência e regras de negócio implementadas para revisão.** O back-end
-está implementado em Java 25 / Spring Boot 4.0.9 e coberto por 24 testes automatizados com
-PostgreSQL. A interface gráfica (React + Vite + TypeScript) será construída na etapa 3 após aprovação desta etapa.
+Entrega final local: API, interface integrada, documentação e capturas reais. A verificação
+está registrada em [revisão final](docs/revisao-commit-3.md). A conexão remota ao Supabase
+permanece **pendente de credenciais e homologação**; os testes usam PostgreSQL real temporário.
+
+Repositório: [Tuzfi/sistema-aluguel-carros](https://github.com/Tuzfi/sistema-aluguel-carros) (privado).
 
 ## Índice
 
-- [Sobre o projeto](#sobre-o-projeto)
-- [Funcionalidades implementadas](#funcionalidades-implementadas)
-- [Tecnologias](#tecnologias)
-- [Arquitetura e modelos](#arquitetura-e-modelos)
+- [Funcionalidades](#funcionalidades)
+- [Tecnologias e arquitetura](#tecnologias-e-arquitetura)
 - [Instalação e execução](#instalação-e-execução)
-- [Estrutura](#estrutura)
-- [Demonstração e testes](#demonstração-e-testes)
-- [Autores e referências](#autores-e-referências)
+- [Demonstração](#demonstração)
+- [Testes](#testes)
+- [Documentação](#documentação)
+- [Autoria e licença](#autoria-e-licença)
 
-## Sobre o projeto
+## Funcionalidades
 
-Clientes cadastrados podem solicitar um automóvel, consultar o andamento, modificar ou
-cancelar pedidos elegíveis. Agentes avaliam pedidos financeiramente e preparam contratos.
-O sistema registra os dados pessoais e até três vínculos de emprego/renda por cliente,
-os automóveis, seus proprietários e o crédito opcional concedido por um banco agente.
+- Cadastro de clientes, login por usuário/senha, sessão, CSRF e logout.
+- Perfil com RG, CPF, nome, endereço, profissão e até três empregos/rendas.
+- Catálogo de carros e cadastro, edição e inativação da frota do próprio agente.
+- Criação, consulta, edição e cancelamento de pedidos, com histórico e controle de versão.
+- Avaliação financeira por empresas e bancos, com justificativa e parecer preservados.
+- Oferta e edição de crédito pelo banco concedente, sem operação financeira real.
+- Contratos com termos imutáveis, sem sobreposição de períodos e com transferência opcional.
+- Autorização no servidor: isolamento de clientes, conta inativa e papéis de agentes.
 
-## Funcionalidades implementadas
+## Tecnologias e arquitetura
 
-- **Autenticação e Sessão:** cadastro público de clientes, login, logout, cookies de sessão, CSRF e rate limiting.
-- **Clientes:** gestão do perfil próprio com até três fontes de rendimento e exclusão lógica.
-- **Frota:** catálogo para autenticados; cadastro, edição e inativação restritos aos proprietários.
-- **Pedidos:** criação, cálculo de diárias no servidor, cancelamento, controle de versão e eventos.
-- **Avaliação Financeira:** parecer por agentes (EMPRESA e BANCO) com justificativa e histórico preservado.
-- **Crédito:** proposta de financiamento opcional formulada por BANCO vinculada ao pedido.
-- **Contratos:** emissão atômica com validação de datas (horário de Brasília), bloqueio de sobreposição de reservas e suporte a locação simples e transferência de propriedade.
-- **Operação:** provisionamento administrativo de agentes via CLI (`ProvisionarAgente`).
+| Camada | Implementação |
+| --- | --- |
+| Back-end | Java 25, Spring Boot 4.0.9, Spring MVC, Security, Validation e Data JPA |
+| Banco | PostgreSQL; configuração JDBC para Supabase; Flyway V1 e V2 |
+| Build | Maven Wrapper 3.9.11 |
+| Front-end | React 19, TypeScript, Vite 8 e React Router |
+| Testes | JUnit, HTTP + PostgreSQL embarcado, Vitest e Playwright/Chromium |
+| Modelos | Casos de uso, classes, pacotes, estados e sequência em PlantUML e SVG |
 
-## Tecnologias
-
-| Camada | Tecnologia planejada | Motivo |
-| --- | --- | --- |
-| Back-end | Java JDK 25 e Spring Boot 4.0.x | Exigência do enunciado |
-| Build | Apache Maven com Wrapper | Exigência; execução reproduzível |
-| Web/API | Spring MVC, Validation e Security | MVC, validação e autenticação |
-| Persistência | Spring Data JPA, Flyway | Persistência e migrações versionadas |
-| Banco | Supabase PostgreSQL | Exigência do enunciado |
-| Front-end | React, TypeScript e Vite | React + Vite exigidos; tipagem escolhida |
-| Testes | JUnit, Spring Test, PostgreSQL de teste; Vitest e Playwright | Regras, integração e jornadas |
-| Modelagem | PlantUML, fontes e SVG versionados | UML revisável e imagens locais |
-
-As versões exatas de bibliotecas serão fixadas nos manifests e lockfiles das etapas de
-implementação. O uso de TypeScript, Flyway e das ferramentas de teste é uma decisão de projeto.
-
-## Arquitetura e modelos
-
-Monólito modular MVC com API JSON e interface React. O navegador conversa apenas com a API;
-o back-end concentra autorização e regras de negócio e acessa o PostgreSQL.
-
-- [Requisitos e decisões](docs/requisitos.md)
-- [Histórias e critérios de aceite](docs/historias.md)
-- [Arquitetura](docs/arquitetura.md)
-- [Modelo de dados](docs/modelo-de-dados.md)
-- [Contrato da API](docs/api.md)
-- [Fluxos de telas](docs/interface.md)
-- [Modelos UML e versões](docs/uml/README.md)
-- [Plano de testes e rastreabilidade](docs/testes.md)
-- [Checklist de revisão do commit 1](docs/revisao-commit-1.md)
-- [Checklist de revisão do commit 2](docs/revisao-commit-2.md)
+Monólito modular MVC: controllers recebem DTOs, serviços aplicam regras e transações,
+repositórios persistem os modelos e o React constrói a apresentação. O navegador acessa
+somente a API. Senhas do banco ficam no servidor.
 
 ![Visão lógica](docs/uml/v1/pacotes.svg)
 
+```text
+backend/       API Java, Maven Wrapper, migrações e testes de integração
+frontend/      React, cliente HTTP, páginas, testes unitários e E2E
+docs/          requisitos, histórias, arquitetura, UML e screenshots
+docker-compose.yml   PostgreSQL local opcional
+```
+
 ## Instalação e execução
 
-### Pré-requisitos
-- Java Development Kit (JDK) 25 instalado
-- Git instalado
+Pré-requisitos: **JDK 25, Node.js 22.12+ e npm**. O Maven Wrapper baixa o Maven no primeiro
+uso. Docker é opcional para o PostgreSQL persistente. Comandos abaixo para PowerShell,
+executados a partir da raiz do repositório.
 
-### Execução dos testes automatizados
-Dentro da pasta `backend/`:
-```bash
-# Windows (PowerShell / CMD)
-.\mvnw.cmd test
+### Demonstração local sem Docker
 
-# Linux / macOS
-./mvnw test
+Terminal 1:
+
+```powershell
+cd frontend
+npm ci
+$env:VIACAR_DEMO_PASSWORD = 'EscolhaUmaSenhaLocal123!'
+npm run demo:api
 ```
-*O teste de integração inicializa um PostgreSQL embarcado em runtime para validação local completa sem depender de Docker ou serviços externos.*
 
-### Construção do pacote (JAR)
-```bash
-.\mvnw.cmd package -DskipTests
+Esse comando compila a aplicação, inicia PostgreSQL temporário e cria agentes fictícios
+`empresa` e `banco`, com a senha escolhida acima, além de três automóveis. Use apenas para
+demonstração local: o banco é temporário e não contém dados de produção. A API escuta
+em `http://localhost:8080`; os clientes se cadastram na interface.
+
+Terminal 2:
+
+```powershell
+cd frontend
+npm run dev
 ```
-O artefato executável é gerado em `backend/target/viacar-0.2.0.jar`.
 
-### Execução da aplicação
-Configure as variáveis em `backend/.env` (use `backend/.env.example` como base) e execute:
-```bash
+Abra `http://localhost:5173`. Encerre a demonstração com Ctrl+C nos dois terminais.
+
+### PostgreSQL persistente local
+
+```powershell
+docker compose up -d
+cd backend
+.\mvnw.cmd spring-boot:run '-Dspring-boot.run.profiles=local'
+```
+
+O perfil `local` usa o banco do Compose na porta 5432. O Compose inicia apenas o banco;
+execute a interface em outro terminal. Não há agentes com senha fixa nas migrações.
+
+### Supabase
+
+Defina as variáveis **no processo**, usando os dados de conexão do seu projeto:
+
+```powershell
+$env:DB_URL = 'jdbc:postgresql://HOST:5432/postgres?sslmode=require'
+$env:DB_USERNAME = 'USUARIO_DO_PROJETO'
+$env:DB_PASSWORD = 'SENHA_DO_PROJETO'
+# Somente para desenvolvimento HTTP local; em HTTPS mantenha true.
+$env:APP_COOKIE_SECURE = 'false'
+cd backend
 .\mvnw.cmd spring-boot:run
 ```
-A API estará acessível em `http://localhost:8080` e a especificação OpenAPI protegida em `http://localhost:8080/api/openapi`.
 
-### Provisionamento operacional de agentes
-Para cadastrar agentes empresariais ou bancários:
-```bash
-java -cp target/viacar-0.2.0.jar br.edu.viacar.auth.ProvisionarAgente <usuario> <senha> <EMPRESA|BANCO> <nome> <cnpj>
+`.env` não é carregado automaticamente. Consulte [ambiente](docs/ambiente.md).
+O Flyway cria o schema `viacar`; use uma conexão com suporte a JDBC/transações e permissão
+para migração. A aplicação não usa Supabase Auth nem expõe o banco ao navegador.
+O ambiente remoto não foi testado porque não foram fornecidas credenciais.
+
+### Provisionar agentes no banco escolhido
+
+No mesmo ambiente de variáveis do banco, em um terminal interativo:
+
+```powershell
+cd backend
+.\mvnw.cmd test-compile dependency:build-classpath '-Dmdep.outputFile=target/classpath.txt'
+$cp = 'target/classes;' + (Get-Content target/classpath.txt -Raw).Trim()
+java -cp $cp br.edu.viacar.auth.ProvisionarAgente
 ```
 
-### Deploy
+O comando solicita usuário, papel EMPRESA/BANCO, razão social, documento e senha oculta.
+Cadastro público cria somente clientes. Não passe senha como argumento da linha de comando.
 
-Não há ambiente publicado nem repositório remoto público configurado. A entrega da Etapa 2 é local e validada. A publicação acadêmica e configuração de instâncias do Supabase serão executadas quando houver credenciais e autorização.
+### Build
 
-## Estrutura
-
-```text
-README.md
-CONTRIBUTING.md
-backend/
-  pom.xml
-  mvnw / mvnw.cmd
-  src/main/java/br/edu/viacar/   (auth, cliente, veiculo, pedido, contrato, shared)
-  src/main/resources/db/migration/ (Flyway V1, V2)
-  src/test/java/br/edu/viacar/   (ApiTest, ValidacaoTest)
-docs/
-  requisitos.md
-  historias.md
-  arquitetura.md
-  modelo-de-dados.md
-  api.md
-  interface.md
-  ambiente.md
-  testes.md
-  revisao-commit-1.md
-  revisao-commit-2.md
-  assets/logo.svg
-  uml/
+```powershell
+cd backend
+.\mvnw.cmd package
+# Saída: backend/target/viacar-0.2.0.jar
+cd ../frontend
+npm run build
+# Saída: frontend/dist/
 ```
 
-`frontend/` será criado no commit 3.
+Em produção, sirva `dist` com fallback de SPA e encaminhe `/api` para a API na mesma
+origem HTTPS, usando cookies Secure. `vite preview` não configura esse proxy de produção.
+Não há deploy público nesta entrega.
 
-## Demonstração e testes
+## Demonstração
 
-Nesta etapa, o back-end foi validado com **24 testes automatizados** cobrindo:
-1. Validações de CPF, regras de senhas, precisão de decimais e horário.
-2. Migrações Flyway e schemas em PostgreSQL.
-3. Fluxo de sessão, CSRF e isolamento de dados de clientes.
-4. Regras de negócios de pedidos, cálculo de diárias e concorrência na locação.
-5. Emissão de contratos atômica com bloqueio de concorrência via virtual threads.
+Capturas da aplicação real em navegador Chromium, usando somente dados fictícios.
 
-Consulte o [checklist de revisão do commit 2](docs/revisao-commit-2.md) para os detalhes de validação.
+| Login | Catálogo |
+| --- | --- |
+| ![Login](docs/screenshots/01-login.png) | ![Catálogo](docs/screenshots/02-catalogo.png) |
 
-## Autores e referências
+| Pedido e histórico | Avaliação e crédito |
+| --- | --- |
+| ![Pedido](docs/screenshots/03-pedido.png) | ![Análise financeira](docs/screenshots/04-analise-credito.png) |
 
-Os dados dos integrantes da equipe acadêmica serão informados pelo responsável antes da entrega.
-Projeto desenvolvido como parte das atividades práticas da disciplina.
+| Frota da empresa | Contrato emitido |
+| --- | --- |
+| ![Frota](docs/screenshots/05-frota.png) | ![Contrato](docs/screenshots/06-contrato.png) |
 
-- Enunciado fornecido: DIAW, Laboratório 02, Sistema de Aluguel de Carros, 3 páginas.
-- Modelo de README fornecido, atribuído ao Prof. Dr. João Paulo Carneiro Aramuni;
-  seções adaptadas ao escopo e ao estágio real do projeto.
-- [Referência de uso do PlantUML](https://plantuml.com/starting), utilizada para gerar os diagramas.
+[Perfil do cliente](docs/screenshots/07-perfil.png) · [Versão mobile](docs/screenshots/08-mobile.png)
 
-## Contribuição
+## Testes
 
-Consulte [CONTRIBUTING.md](CONTRIBUTING.md). Alterações no modelo e no código devem manter
-os requisitos e diagramas alinhados. A revisão ocorre ao final de cada um dos três commits.
+```powershell
+cd backend
+.\mvnw.cmd test
+cd ../frontend
+npm ci
+npm test
+npm run build
+npm run lint
+npx playwright install chromium
+npm run test:e2e
+```
 
-## Licença
+O E2E inicia sua própria API, PostgreSQL temporário e Vite nas portas 18080 e 15173,
+sem reutilizar servidores de desenvolvimento. Exercita cadastro, login, CSRF, pedido,
+edição por cliente/agente, parecer, crédito, emissão, perfil, cancelamento e exclusão lógica.
+As capturas acima são regeneradas pelo teste. [Resultados e limites](docs/revisao-commit-3.md).
 
-Licença de distribuição a definir pelo responsável. O exemplo MIT do template não foi
-adotado automaticamente. Os materiais acadêmicos de referência mantêm sua autoria original.
+## Documentação
+
+- [Requisitos e decisões de domínio](docs/requisitos.md)
+- [Histórias e critérios de aceite](docs/historias.md)
+- [Arquitetura MVC](docs/arquitetura.md)
+- [Modelo de dados](docs/modelo-de-dados.md)
+- [Contrato da API](docs/api.md); OpenAPI autenticado em `/api/openapi`
+- [Interface](docs/interface.md)
+- [Modelos UML versionados](docs/uml/README.md)
+- [Plano de testes](docs/testes.md)
+- [Ambiente](docs/ambiente.md)
+- [Revisão final](docs/revisao-commit-3.md)
+- [Roteiro de apresentação](docs/roteiro-apresentacao.md)
+- [Contribuição](CONTRIBUTING.md)
+
+## Autoria e licença
+
+Projeto desenvolvido com auxílio de ferramentas de IA e revisão do responsável. Os nomes
+dos integrantes acadêmicos devem ser informados pela equipe antes da apresentação.
+Licença de distribuição a definir; não foi adotada automaticamente a licença do template.
+
+Referências fornecidas: enunciado DIAW Laboratório 02, Sistema de Aluguel de Carros, e
+template de README atribuído ao Prof. Dr. João Paulo Carneiro Aramuni. Modelagem gerada
+com [PlantUML](https://plantuml.com/starting).

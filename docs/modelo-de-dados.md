@@ -2,7 +2,8 @@
 
 Nomes de tabelas propostos em snake_case; UUID como chave primária. Dinheiro em
 numeric(12,2), taxa em numeric(7,4), timestamps em UTC. Entidades editáveis incluem `versao`.
-DDL executável e índices serão entregues em C2, após aprovação do modelo.
+DDL e índices estão em backend/src/main/resources/db/migration. Os relacionamentos
+são representados por IDs UUID nas entidades e chaves estrangeiras no PostgreSQL.
 
 | Entidade | Campos principais | Restrições |
 | --- | --- | --- |
@@ -11,8 +12,8 @@ DDL executável e índices serão entregues em C2, após aprovação do modelo.
 | VinculoEmprego | id, cliente_id, posicao, empregador, renda_mensal | posição 1..3; unique(cliente_id, posicao); renda > 0 |
 | Agente | id, usuario_id, razao_social, documento | usuario_id único; papel de usuário EMPRESA ou BANCO; documento único |
 | Veiculo | id, matricula, ano, marca, modelo, placa, diaria, proprietario_id, ativo, versao | matrícula e placa únicas; proprietário referencia Usuario; diária > 0 |
-| Pedido | id, cliente_id, veiculo_id, inicio, fim, diaria, total, tipo_contrato, status, revisao, versao, criado_em | fim > início; valor positivo; revisão incrementada em edição material |
-| Avaliacao | id, pedido_id, agente_id, revisao_pedido, decisao, justificativa, dados_financeiros, criado_em | imutável; retrato financeiro JSONB; avaliação corrente determinada pelo evento mais recente válido |
+| Pedido | id, cliente_id, veiculo_id, inicio, fim, diaria, total, tipo_contrato, status, revisao, avaliacao_atual_id, versao, criado_em | fim > início; valor positivo; revisão incrementada em edição material |
+| Avaliacao | id, pedido_id, agente_id, revisao_pedido, decisao, justificativa, dados_financeiros, criado_em | imutável; retrato financeiro JSONB; avaliação corrente referenciada por pedido.avaliacao_atual_id |
 | OfertaCredito | id, pedido_id, banco_id, revisao_pedido, principal, taxa_mensal, parcelas, status, versao | banco agente; status ATIVA/INVALIDADA/CONTRATADA; índice parcial único de oferta ATIVA por pedido |
 | Contrato | id, pedido_id, avaliacao_id, emissor_id, oferta_credito_id, proprietario_anterior_id, proprietario_final_id, termos, criado_em | pedido_id único; oferta única quando presente; termos JSONB imutáveis com período, valores e partes |
 | EventoPedido | id, pedido_id, autor_id, acao, status_anterior, status_novo, revisao, criado_em | append-only; não aceita edição pelo usuário |

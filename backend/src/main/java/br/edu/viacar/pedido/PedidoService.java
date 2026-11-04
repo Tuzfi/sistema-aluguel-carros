@@ -44,8 +44,12 @@ public class PedidoService {
     @Transactional(readOnly=true)
     public PedidoDto.Detalhe detalhe(UUID id) {
         Pedido p=consultar(id);
+        Usuario usuario = acesso.atual();
+        boolean agente = usuario.getPapel() != Papel.CLIENTE;
+        boolean podeContratar = agente && veiculos.buscar(p.getVeiculoId()).getProprietarioId().equals(usuario.getId());
+        UUID agenteAtualId = agente ? acesso.agente().getId() : null;
         return new PedidoDto.Detalhe(PedidoDto.Resumo.de(p),avaliacoes.findByPedidoIdOrderByCriadoEmAsc(id).stream().map(PedidoDto.AvaliacaoResumo::de).toList(),
-            eventos.findByPedidoIdOrderByCriadoEmAsc(id).stream().map(PedidoDto.Evento::de).toList(),ofertas.findByPedidoId(id).stream().map(ContratoDto.Oferta::de).toList(),contratos.findByPedidoId(id).map(Contrato::getId).orElse(null));
+            eventos.findByPedidoIdOrderByCriadoEmAsc(id).stream().map(PedidoDto.Evento::de).toList(),ofertas.findByPedidoId(id).stream().map(ContratoDto.Oferta::de).toList(),contratos.findByPedidoId(id).map(Contrato::getId).orElse(null), podeContratar, agenteAtualId);
     }
     public Pedido consultar(UUID id) {
         Pedido p=pedidos.findById(id).orElseThrow(RegraException::naoEncontrado); conferirDono(p.getClienteId()); return p;

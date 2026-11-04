@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="100" viewBox="0 0 360 100" role="img" aria-labelledby="title">
+<title id="title">ViaCar - Sistema de aluguel de carros</title>
+<rect width="360" height="100" rx="20" fill="#102c46"/>
+<path d="M26 62V49l12-22h42l13 22v13M28 48h62M39 28l-8 20m47-20 9 20" fill="none" stroke="#48d5b5" stroke-width="6" stroke-linejoin="round"/>
+<circle cx="40" cy="64" r="9" fill="#48d5b5"/><circle cx="80" cy="64" r="9" fill="#48d5b5"/>
+<text x="116" y="56" font-family="Segoe UI,Arial,sans-serif" font-size="38" font-weight="700" fill="white">ViaCar</text>
+<text x="118" y="78" font-family="Segoe UI,Arial,sans-serif" font-size="13" fill="#b9d5e5">ALUGUEL DE CARROS</text>
+</svg>
