@@ -2,17 +2,8 @@
 
 <img src="docs/assets/logo.svg" alt="ViaCar" width="240">
 
-Protótipo acadêmico do Laboratório 02 de Desenvolvimento e Integração de Aplicações Web.
-Clientes solicitam aluguéis; empresas e bancos avaliam os pedidos e a locadora proprietária
-emite contratos com crédito bancário opcional.
-
-## Status
-
-Entrega final local: API, interface integrada, documentação e capturas reais. A verificação
-está registrada em [revisão final](docs/revisao-commit-3.md). A conexão remota ao Supabase
-permanece **pendente de credenciais e homologação**; os testes usam PostgreSQL real temporário.
-
-Repositório: [Tuzfi/sistema-aluguel-carros](https://github.com/Tuzfi/sistema-aluguel-carros)
+Sistema web de aluguel de automóveis com cadastro de clientes, gestão de frota,
+solicitações de aluguel, análise financeira e emissão de contratos com crédito opcional.
 
 ## Índice
 
